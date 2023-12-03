@@ -13,3 +13,17 @@
 .radius{
   -fx-background-radius: 100px;
 }
+
+.light-gray-background {
+  -fx-background-color: #DADADA;
+}
+
+.incoming-message-background {
+  -fx-background-color: #FFFFFF;
+  -fx-background-radius: 20px;
+}
+
+.outgoing-message-background {
+  -fx-background-color: #50c984;
+  -fx-background-radius: 20px;
+}

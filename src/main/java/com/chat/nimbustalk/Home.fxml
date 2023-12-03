@@ -3,6 +3,7 @@
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -191,7 +192,7 @@
                                     <Font name="Ebrima Bold" size="20.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="10.0" layoutY="10.0" prefHeight="32.0" prefWidth="193.0" text="hi brother how are you" textFill="#9da7a7">
+                              <Label layoutX="10.0" layoutY="10.0" prefHeight="32.0" prefWidth="193.0" text="how are u" textFill="#9da7a7">
                                  <font>
                                     <Font name="Ebrima Bold" size="18.0" />
                                  </font>
@@ -224,7 +225,7 @@
                                     <Font name="Ebrima Bold" size="20.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="10.0" layoutY="10.0" prefHeight="32.0" prefWidth="193.0" text="hi brother how are you" textFill="#9da7a7">
+                              <Label layoutX="10.0" layoutY="10.0" prefHeight="32.0" prefWidth="193.0" text="nice to meet u" textFill="#9da7a7">
                                  <font>
                                     <Font name="Ebrima Bold" size="18.0" />
                                  </font>
@@ -257,7 +258,7 @@
                                     <Font name="Ebrima Bold" size="20.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="10.0" layoutY="10.0" prefHeight="32.0" prefWidth="193.0" text="hi brother how are you" textFill="#9da7a7">
+                              <Label layoutX="10.0" layoutY="10.0" prefHeight="32.0" prefWidth="193.0" text="thanks for sharing this" textFill="#9da7a7">
                                  <font>
                                     <Font name="Ebrima Bold" size="18.0" />
                                  </font>
@@ -278,4 +279,104 @@
          </children>
       </HBox>
    </left>
+   <center>
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label prefHeight="32.0" prefWidth="57.0" text="Ilyas" textFill="#9da7a7">
+                     <font>
+                        <Font name="Ebrima Bold" size="24.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="20.0" right="10.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Circle fill="#50c984" radius="4.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                  <Label prefHeight="32.0" prefWidth="57.0" text="Online" textFill="#9da7a7">
+                     <font>
+                        <Font name="Ebrima" size="16.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Pane prefHeight="100.0" prefWidth="245.0" HBox.hgrow="ALWAYS" />
+                  <ImageView fitHeight="29.0" fitWidth="27.0" layoutX="157.0" layoutY="46.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../../../../../../Downloads/icons8-video-call-48.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets left="30.0" />
+                     </HBox.margin>
+                  </ImageView>
+                  <ImageView fitHeight="29.0" fitWidth="27.0" layoutX="184.0" layoutY="46.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../../../../../../Downloads/icons8-call-30%20(1).png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets left="30.0" />
+                     </HBox.margin>
+                  </ImageView>
+                  <ImageView fitHeight="29.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../../../../../../Downloads/icons8-menu-48.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets left="20.0" right="10.0" />
+                     </HBox.margin>
+                  </ImageView>
+               </children>
+            </HBox>
+            <ScrollPane prefHeight="534.0" prefWidth="590.0" styleClass="transparent-background" stylesheets="@Css/style.css">
+               <content>
+                  <Pane prefHeight="531.0" prefWidth="595.0" styleClass="light-gray-background" stylesheets="@Css/style.css">
+                     <children>
+                        <ImageView fitHeight="45.0" fitWidth="53.0" layoutX="6.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../../../../../../Downloads/user.png" />
+                           </image>
+                        </ImageView>
+                        <Label alignment="CENTER" layoutX="63.0" layoutY="14.0" prefHeight="39.0" prefWidth="102.0" styleClass="incoming-message-background" stylesheets="@Css/style.css" text="hi brother" textFill="#9da7a7">
+                           <font>
+                              <Font name="Ebrima" size="18.0" />
+                           </font>
+                        </Label>
+                        <ImageView fitHeight="45.0" fitWidth="53.0" layoutX="544.0" layoutY="73.0" pickOnBounds="true" preserveRatio="true" styleClass="radius">
+                           <image>
+                              <Image url="@../../../../../../../../../Downloads/userMe.png" />
+                           </image>
+                        </ImageView>
+                        <Label alignment="CENTER" layoutX="425.0" layoutY="78.0" prefHeight="39.0" prefWidth="111.0" styleClass="outgoing-message-background" stylesheets="@Css/style.css" text="Hello bro" textFill="WHITE">
+                           <font>
+                              <Font name="Ebrima" size="18.0" />
+                           </font>
+                        </Label>
+                        <ImageView fitHeight="45.0" fitWidth="53.0" layoutX="11.0" layoutY="142.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../../../../../../Downloads/user.png" />
+                           </image>
+                        </ImageView>
+                        <Label alignment="CENTER" layoutX="68.0" layoutY="145.0" prefHeight="67.0" prefWidth="256.0" styleClass="incoming-message-background" stylesheets="@Css/style.css" text="Where we will.do the meeting ?&#10; is it today ?" textFill="#9da7a7">
+                           <font>
+                              <Font name="Ebrima" size="18.0" />
+                           </font>
+                        </Label>
+                        <ImageView fitHeight="45.0" fitWidth="53.0" layoutX="542.0" layoutY="243.0" pickOnBounds="true" preserveRatio="true" styleClass="radius">
+                           <image>
+                              <Image url="@../../../../../../../../../Downloads/userMe.png" />
+                           </image>
+                        </ImageView>
+                        <Label alignment="CENTER" layoutX="463.0" layoutY="248.0" prefHeight="39.0" prefWidth="71.0" styleClass="outgoing-message-background" stylesheets="@Css/style.css" text="Yes" textFill="WHITE">
+                           <font>
+                              <Font name="Ebrima" size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </Pane>
+               </content>
+            </ScrollPane>
+         </children>
+      </VBox>
+   </center>
 </BorderPane>
