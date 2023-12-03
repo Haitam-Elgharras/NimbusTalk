@@ -328,7 +328,7 @@
                   </ImageView>
                </children>
             </HBox>
-            <ScrollPane prefHeight="534.0" prefWidth="590.0" styleClass="transparent-background" stylesheets="@Css/style.css">
+            <ScrollPane prefHeight="534.0" prefWidth="590.0" styleClass="transparent-background" stylesheets="@Css/style.css" VBox.vgrow="ALWAYS">
                <content>
                   <Pane prefHeight="531.0" prefWidth="595.0" styleClass="light-gray-background" stylesheets="@Css/style.css">
                      <children>
@@ -376,6 +376,39 @@
                   </Pane>
                </content>
             </ScrollPane>
+            <HBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="200.0">
+               <children>
+                  <ImageView fitHeight="34.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../../../../../../Downloads/icons8-smile-50.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </ImageView>
+                  <ImageView fitHeight="34.0" fitWidth="37.0" layoutX="292.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../../../../../../Downloads/icons8-attach-50.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </ImageView>
+                  <TextField prefHeight="50.0" prefWidth="453.0" promptText="Type something to send ..." styleClass="transparent-background" stylesheets="@Css/style.css">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </TextField>
+                  <ImageView fitHeight="34.0" fitWidth="37.0" layoutX="115.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../../../../../../Downloads/icons8-send-24.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </HBox>
          </children>
       </VBox>
    </center>
