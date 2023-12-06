@@ -3,10 +3,11 @@
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
@@ -328,87 +329,48 @@
                   </ImageView>
                </children>
             </HBox>
-            <ScrollPane prefHeight="534.0" prefWidth="590.0" styleClass="transparent-background" stylesheets="@Css/style.css" VBox.vgrow="ALWAYS">
-               <content>
-                  <Pane prefHeight="531.0" prefWidth="595.0" styleClass="light-gray-background" stylesheets="@Css/style.css">
-                     <children>
-                        <ImageView fitHeight="45.0" fitWidth="53.0" layoutX="6.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../../../../../../Downloads/user.png" />
-                           </image>
-                        </ImageView>
-                        <Label alignment="CENTER" layoutX="63.0" layoutY="14.0" prefHeight="39.0" prefWidth="102.0" styleClass="incoming-message-background" stylesheets="@Css/style.css" text="hi brother" textFill="#9da7a7">
-                           <font>
-                              <Font name="Ebrima" size="18.0" />
-                           </font>
-                        </Label>
-                        <ImageView fitHeight="45.0" fitWidth="53.0" layoutX="544.0" layoutY="73.0" pickOnBounds="true" preserveRatio="true" styleClass="radius">
-                           <image>
-                              <Image url="@../../../../../../../../../Downloads/userMe.png" />
-                           </image>
-                        </ImageView>
-                        <Label alignment="CENTER" layoutX="425.0" layoutY="78.0" prefHeight="39.0" prefWidth="111.0" styleClass="outgoing-message-background" stylesheets="@Css/style.css" text="Hello bro" textFill="WHITE">
-                           <font>
-                              <Font name="Ebrima" size="18.0" />
-                           </font>
-                        </Label>
-                        <ImageView fitHeight="45.0" fitWidth="53.0" layoutX="11.0" layoutY="142.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../../../../../../Downloads/user.png" />
-                           </image>
-                        </ImageView>
-                        <Label alignment="CENTER" layoutX="68.0" layoutY="145.0" prefHeight="67.0" prefWidth="256.0" styleClass="incoming-message-background" stylesheets="@Css/style.css" text="Where we will.do the meeting ?&#10; is it today ?" textFill="#9da7a7">
-                           <font>
-                              <Font name="Ebrima" size="18.0" />
-                           </font>
-                        </Label>
-                        <ImageView fitHeight="45.0" fitWidth="53.0" layoutX="542.0" layoutY="243.0" pickOnBounds="true" preserveRatio="true" styleClass="radius">
-                           <image>
-                              <Image url="@../../../../../../../../../Downloads/userMe.png" />
-                           </image>
-                        </ImageView>
-                        <Label alignment="CENTER" layoutX="463.0" layoutY="248.0" prefHeight="39.0" prefWidth="71.0" styleClass="outgoing-message-background" stylesheets="@Css/style.css" text="Yes" textFill="WHITE">
-                           <font>
-                              <Font name="Ebrima" size="18.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </Pane>
-               </content>
-            </ScrollPane>
-            <HBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="200.0">
+            <Pane prefHeight="601.0" prefWidth="597.0">
                <children>
-                  <ImageView fitHeight="34.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../../../../../../../Downloads/icons8-smile-50.png" />
-                     </image>
-                     <HBox.margin>
-                        <Insets left="10.0" />
-                     </HBox.margin>
-                  </ImageView>
-                  <ImageView fitHeight="34.0" fitWidth="37.0" layoutX="292.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../../../../../../../Downloads/icons8-attach-50.png" />
-                     </image>
-                     <HBox.margin>
-                        <Insets left="10.0" />
-                     </HBox.margin>
-                  </ImageView>
-                  <TextField prefHeight="50.0" prefWidth="453.0" promptText="Type something to send ..." styleClass="transparent-background" stylesheets="@Css/style.css">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                     <HBox.margin>
-                        <Insets left="10.0" />
-                     </HBox.margin>
-                  </TextField>
-                  <ImageView fitHeight="34.0" fitWidth="37.0" layoutX="115.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../../../../../../../Downloads/icons8-send-24.png" />
-                     </image>
-                  </ImageView>
+                  <AnchorPane layoutX="-4.0" layoutY="511.0" prefHeight="90.0" prefWidth="601.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" layoutX="4.0" layoutY="17.0" prefHeight="70.0" prefWidth="597.0">
+                           <children>
+                              <ImageView fitHeight="34.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../../../../../../../Downloads/icons8-smile-50.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <ImageView fitHeight="34.0" fitWidth="37.0" layoutX="292.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../../../../../../../Downloads/icons8-attach-50.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <TextField fx:id="msgField" onKeyPressed="#sendMessageByKey" prefHeight="50.0" prefWidth="453.0" promptText="Type something to send ..." styleClass="transparent-background" stylesheets="@Css/style.css">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                              </TextField>
+                              <ImageView fitHeight="34.0" fitWidth="37.0" layoutX="115.0" layoutY="28.0" onMouseClicked="#handleSendEvent" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../../../../../../../Downloads/icons8-send-24.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </HBox>
+                     </children>
+                  </AnchorPane>
+                  <TextArea fx:id="msgRoom" layoutY="-1.0" prefHeight="536.0" prefWidth="598.0" />
                </children>
-            </HBox>
+            </Pane>
          </children>
       </VBox>
    </center>
