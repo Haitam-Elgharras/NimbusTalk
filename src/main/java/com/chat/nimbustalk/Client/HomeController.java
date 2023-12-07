@@ -2,9 +2,11 @@ package com.chat.nimbustalk.Client;
 
 
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.NodeOrientation;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -12,13 +14,21 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 
 import java.io.*;
+import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 //import static Client.Controller.loggedInUser;
@@ -55,9 +65,22 @@ public class HomeController extends Thread implements Initializable {
     public ImageView proImage;
     @FXML
     public Circle showProPic;
+    @FXML
+    public HBox userBox;
+    @FXML
+    public HBox userBox1;
+    @FXML
+    public VBox userBoxContainer;
+    @FXML
+    public HBox searchBox;
+    @FXML
+    public ImageView btnEmoji;
+    @FXML
+    private TextFlow emojiList;
     private FileChooser fileChooser;
     private File filePath;
     public boolean toggleChat = false, toggleProfile = false;
+
 
     BufferedReader reader; // to read the messages from the server
     PrintWriter writer; // to write the messages to the server
@@ -66,6 +89,12 @@ public class HomeController extends Thread implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        for(Node text : emojiList.getChildren()){
+            text.setOnMouseClicked(event -> {
+                msgField.setText(msgField.getText()+" "+((Text)text).getText());
+                emojiList.setVisible(false);
+            });
+        }
         connectSocket();
     }
 
@@ -188,4 +217,51 @@ public class HomeController extends Thread implements Initializable {
             System.exit(0);
         }
     }
+
+    public void handleUserBoxClick(MouseEvent event) throws MalformedURLException {
+        // Get the user box that was clicked
+        HBox clickedUserBox = (HBox) event.getSource();
+        System.out.println(clickedUserBox.getId());
+
+        // File and URL creation for the stylesheet
+        File file = new File("src/main/java/com/chat/nimbustalk/Client/Css/style.css");
+        URL url = file.toURI().toURL();
+        String stylesheet = url.toExternalForm();
+
+        // Check if the stylesheet is already added
+        if (!clickedUserBox.getStylesheets().contains(stylesheet)) {
+            // Add the stylesheet only if it's not added before
+            clickedUserBox.getStylesheets().add(stylesheet);
+            System.out.println("Stylesheet added");
+            System.out.println(stylesheet);
+        } else {
+            System.out.println("Stylesheet already added");
+        }
+
+        // Iterate through all user boxes and update their style classes
+        for (Node node : userBoxContainer.getChildren()) {
+            if ((node instanceof HBox userBox) && !Objects.equals(node.getId(), "searchBox")) {
+                if (userBox == clickedUserBox) {
+                    userBox.getStyleClass().add("gray-background");
+                    System.out.println("Class added");
+                } else {
+                    userBox.getStyleClass().remove("gray-background");
+                    System.out.println("Class removed");
+                }
+            }
+        }
+    }
+
+
+    @FXML
+    void emojiAction(MouseEvent event) {
+        emojiList.setVisible(!emojiList.isVisible());
+    }
+
+
 }
+
+
+
+
+

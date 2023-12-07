@@ -28,3 +28,14 @@
   -fx-background-color: #50c984;
   -fx-background-radius: 20px;
 }
+
+.margin-right {
+  -fx-margin-right: 10px;
+}
+
+#emojiList{
+  -fx-font-size: 16px;
+  -fx-padding: 2;
+  -fx-text-fill: chocolate;
+  -fx-background-color: rgba(255,255,255,0.7);
+}
