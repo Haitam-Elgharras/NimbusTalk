@@ -18,6 +18,7 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
+<?import javafx.scene.control.ScrollPane?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1005.0" stylesheets="@../Css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chat.nimbustalk.Client.HomeController">
    <left>
       <HBox prefHeight="700.0" prefWidth="408.0" BorderPane.alignment="CENTER">
@@ -376,7 +377,13 @@
                         </HBox>
                      </children>
                   </AnchorPane>
-                  <TextArea fx:id="msgRoom" layoutY="-1.0" prefHeight="536.0" prefWidth="598.0" />
+<!--                  <TextArea fx:id="msgRoom" layoutY="-1.0" prefHeight="536.0" prefWidth="598.0" />-->
+                  <ScrollPane fx:id="scrollPane" accessibleRole="PARENT"
+                              hbarPolicy="NEVER" layoutY="-1" prefHeight="536.0" prefWidth="598.0" vvalue="1.0">
+                     <content>
+                        <VBox fx:id="msgRoom" alignment="TOP_RIGHT" prefHeight="536.0" prefWidth="598.0" />
+                     </content>
+                  </ScrollPane>
                   <TextFlow fx:id="emojiList" layoutX="15.0"
                             layoutY="411.0" prefHeight="91.0" prefWidth="260.0" visible="false">
                      <children>
