@@ -15,8 +15,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1005.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chat.nimbustalk.Client.HomeController">
+<?import javafx.scene.control.ScrollPane?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1005.0" stylesheets="@../Css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chat.nimbustalk.Client.HomeController">
    <left>
       <HBox prefHeight="700.0" prefWidth="408.0" BorderPane.alignment="CENTER">
          <children>
@@ -66,9 +69,9 @@
                   </ImageView>
                </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="315.0" styleClass="gray-background" stylesheets="@../Css/style.css">
+            <VBox fx:id="userBoxContainer" prefHeight="200.0" prefWidth="315.0" styleClass="gray-background" stylesheets="@../Css/style.css">
                <children>
-                  <HBox alignment="CENTER" prefHeight="42.0" prefWidth="200.0" stylesheets="@../Css/style.css">
+                  <HBox fx:id="searchBox" alignment="CENTER" prefHeight="42.0" prefWidth="200.0" stylesheets="@../Css/style.css">
                      <children>
                         <ImageView fitHeight="26.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -96,7 +99,7 @@
                      </styleClass>
                   </HBox>
                   <Pane prefHeight="2.0" prefWidth="200.0" styleClass="dark-gray-background" stylesheets="@../Css/style.css" />
-                  <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="315.0">
+                  <HBox fx:id="userBox" alignment="CENTER_LEFT" onMouseClicked="#handleUserBoxClick" prefHeight="100.0" prefWidth="315.0" stylesheets="@../Css/style.css">
                      <children>
                         <ImageView fitHeight="60.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -131,7 +134,7 @@
                         <Insets />
                      </VBox.margin>
                   </HBox>
-                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="94.0" prefHeight="100.0" prefWidth="315.0">
+                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="94.0" onMouseClicked="#handleUserBoxClick" prefHeight="100.0" prefWidth="315.0" stylesheets="@../Css/style.css">
                      <children>
                         <ImageView fitHeight="60.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -176,7 +179,7 @@
                         <Insets />
                      </VBox.margin>
                   </HBox>
-                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="194.0" prefHeight="100.0" prefWidth="315.0">
+                  <HBox fx:id="userBox1" alignment="CENTER_LEFT" layoutX="10.0" layoutY="194.0" onMouseClicked="#handleUserBoxClick" prefHeight="100.0" prefWidth="315.0" styleClass="dark-gray-background" stylesheets="@../Css/style.css">
                      <children>
                         <ImageView fitHeight="60.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -208,8 +211,11 @@
                         </VBox>
                         <Pane prefHeight="79.0" prefWidth="101.0" />
                      </children>
+                     <VBox.margin>
+                        <Insets left="2.0" />
+                     </VBox.margin>
                   </HBox>
-                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="294.0" prefHeight="100.0" prefWidth="315.0">
+                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="294.0" onMouseClicked="#handleUserBoxClick" prefHeight="100.0" prefWidth="315.0" stylesheets="@../Css/style.css">
                      <children>
                         <ImageView fitHeight="60.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -242,7 +248,7 @@
                         <Pane prefHeight="79.0" prefWidth="101.0" />
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="394.0" prefHeight="100.0" prefWidth="315.0">
+                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="394.0" onMouseClicked="#handleUserBoxClick" prefHeight="100.0" prefWidth="315.0" stylesheets="@../Css/style.css">
                      <children>
                         <ImageView fitHeight="60.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -335,7 +341,7 @@
                      <children>
                         <HBox alignment="CENTER_LEFT" layoutX="4.0" layoutY="17.0" prefHeight="70.0" prefWidth="597.0">
                            <children>
-                              <ImageView fitHeight="34.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="btnEmoji" fitHeight="34.0" fitWidth="37.0" onMouseClicked="#emojiAction" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../icons/icons8-smile-50.png" />
                                  </image>
@@ -371,7 +377,100 @@
                         </HBox>
                      </children>
                   </AnchorPane>
-                  <TextArea fx:id="msgRoom" layoutY="-1.0" prefHeight="536.0" prefWidth="598.0" />
+<!--                  <TextArea fx:id="msgRoom" layoutY="-1.0" prefHeight="536.0" prefWidth="598.0" />-->
+                  <ScrollPane fx:id="scrollPane" accessibleRole="PARENT"
+                              hbarPolicy="NEVER" layoutY="-1" prefHeight="536.0" prefWidth="598.0" vvalue="1.0">
+                     <content>
+                        <VBox fx:id="msgRoom" alignment="TOP_RIGHT" prefHeight="536.0" prefWidth="598.0" />
+                     </content>
+                  </ScrollPane>
+                  <TextFlow fx:id="emojiList" layoutX="15.0"
+                            layoutY="411.0" prefHeight="91.0" prefWidth="260.0" visible="false">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😀" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😁" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😂" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😃" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😄" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😅" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😆" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😇" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😈" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😉" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😊" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😋" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😌" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😍" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😎" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😏" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😐" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😑" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😒" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😓" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😔" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😕" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😖" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😗" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😘" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😙" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😚" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😛" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😜" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😝" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😞" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😟" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😠" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😡" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😢" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😣" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😤" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😥" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😦" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😧" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😨" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😩" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😪" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😫" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😬" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😭" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😮" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😯" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😰" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😱" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😲" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😳" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😴" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😵" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😶" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😷" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😸" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😹" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😺" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😻" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😼" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😽" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😾" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="😿" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="🙀" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="🙁" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="🙂" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="🙃" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="🙄" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="🙅" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="🙆" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="🙇" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="🙈" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="🙉" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="🙊" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="🙋" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="🙌" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="🙍" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="🙎" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="🙏" />
+
+                     </children>
+                  </TextFlow>
+
                </children>
             </Pane>
          </children>
