@@ -1,17 +1,15 @@
 package com.chat.nimbustalk.Client;
 
-
-
+import com.chat.nimbustalk.Server.dao.Impl.MessageDaoImpl;
+import com.chat.nimbustalk.Server.dao.entities.Message;
+import com.chat.nimbustalk.Server.service.Impl.IServiceMessageImpl;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -31,8 +29,6 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -86,6 +82,8 @@ public class HomeController extends Thread implements Initializable {
     private File filePath;
     public boolean toggleChat = false, toggleProfile = false;
 
+    IServiceMessageImpl serviceMessage = new IServiceMessageImpl(new MessageDaoImpl());
+
 
     BufferedReader reader; // to read the messages from the server
     PrintWriter writer; // to write the messages to the server
@@ -116,7 +114,8 @@ public class HomeController extends Thread implements Initializable {
             writer = new PrintWriter(socket.getOutputStream(), true);
 
             // 4. Send the username to the server
-            writer.println(Controller.username);
+            writer.println(Controller.user.getFullName());
+
 
             // 5. Start a new thread for background communication
             this.start();
@@ -150,7 +149,7 @@ public class HomeController extends Thread implements Initializable {
                 System.out.println(fullMsg);
 
                 // 5. Skip messages sent by the current user because they are already displayed
-                if (cmd.equalsIgnoreCase(Controller.username + ":")) {
+                if (cmd.equalsIgnoreCase(Controller.user.getFullName() + ":")) {
                     continue;
                 } else if (fullMsg.toString().trim().equalsIgnoreCase("bye")) {
                     // 6. If the message indicates "bye," exit the loop and close resources
@@ -183,7 +182,7 @@ public class HomeController extends Thread implements Initializable {
     public boolean update(String username, String message) {
 
         // if the message is sent by the current user, we must replace the username with "You" inside the message
-        if (username.equalsIgnoreCase(Controller.username)) {
+        if (username.equalsIgnoreCase(Controller.user.getFullName())) {
             String[] tokens = message.split(" ");
             tokens[0] = "You:";
             message = String.join(" ", tokens);
@@ -194,7 +193,7 @@ public class HomeController extends Thread implements Initializable {
         text.setFill(Color.WHITE);
         text.getStyleClass().add("message");
         TextFlow tempFlow = new TextFlow();
-        if (!Controller.username.equals(username)) {
+        if (!Controller.user.getFullName().equals(username)) {
             Text txtName = new Text(username + "\n");
             txtName.getStyleClass().add("txtName");
             tempFlow.getChildren().add(txtName);
@@ -216,7 +215,7 @@ public class HomeController extends Thread implements Initializable {
         }
         img.getStyleClass().add("imageView");
 
-        if (!Controller.username.equals(username)) {
+        if (!Controller.user.getFullName().equals(username)) {
             tempFlow.getStyleClass().add("tempFlowFlipped");
             flow.getStyleClass().add("textFlowFlipped");
             msgRoom.setAlignment(Pos.TOP_LEFT); // Use msgRoom instead of chatBox
@@ -265,9 +264,9 @@ public class HomeController extends Thread implements Initializable {
             sendPrivateMessage(recipient, message);
         } else {
             // Regular public message
-            String fullMessage = Controller.username + ": " + message;
+            String fullMessage = Controller.user.getFullName() + ": " + message;
             writer.println(fullMessage);
-            update(Controller.username, fullMessage); // Use the update method here
+            update(Controller.user.getFullName(), fullMessage); // Use the update method here
             msgField.setText("");
             if (message.equalsIgnoreCase("BYE") || message.equalsIgnoreCase("logout")) {
                 System.exit(0);
@@ -276,8 +275,14 @@ public class HomeController extends Thread implements Initializable {
     }
 
     public void sendPrivateMessage(String recipient, String message) {
-        String fullMessage = Controller.username + ":" + recipient + ":" + message;
-        update(Controller.username, fullMessage); // Use the update method here
+        String fullMessage = Controller.user.getFullName() + ":" + recipient + ":" + message;
+        update(Controller.user.getFullName(), fullMessage); // Use the update method here
+        //Add message in DB
+        Message m = new Message();
+        m.setContent(message);
+        m.setSender(Controller.user);
+        m.setReceiver(Controller.user);
+        serviceMessage.addMessage(m);
         msgField.setText("");
         if (message.equalsIgnoreCase("BYE") || message.equalsIgnoreCase("logout")) {
             System.exit(0);

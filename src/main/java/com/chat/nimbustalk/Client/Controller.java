@@ -1,4 +1,9 @@
 package com.chat.nimbustalk.Client;
+import com.chat.nimbustalk.Server.dao.Impl.MessageDaoImpl;
+import com.chat.nimbustalk.Server.dao.Impl.UserDaoImpl;
+import com.chat.nimbustalk.Server.rmi.ChatController;
+import com.chat.nimbustalk.Server.service.Impl.IServiceMessageImpl;
+import com.chat.nimbustalk.Server.service.Impl.IServiceUserImpl;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,12 +18,16 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import com.chat.nimbustalk.Server.dao.entities.User;
+
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
-
-
 
 public class Controller {
     @FXML
@@ -61,56 +70,59 @@ public class Controller {
     public Label nameExists;
     @FXML
     public Label checkEmail;
-    public static String username, password, gender;
+
+    public static User user;
     public static ArrayList<User> loggedInUser = new ArrayList<>();
     public static  ArrayList<User>  users = new ArrayList<>();
 
+    //ChatController chatController;
+    IServiceUserImpl serviceUser = new IServiceUserImpl(new UserDaoImpl());
 
-    public void registration() {
-//       if (!regName.getText().equalsIgnoreCase("")
-//                && !regPass.getText().equalsIgnoreCase("")
-//                && !regEmail.getText().equalsIgnoreCase("")
-//                && !regFirstName.getText().equalsIgnoreCase("")
-//                && !regPhoneNo.getText().equalsIgnoreCase("")
-//                && (male.isSelected() || female.isSelected())) {
-//            if(checkUser(regName.getText())) {
-//                if(checkEmail(regEmail.getText())) {
-//                    User newUser = new User();
-//                    newUser.name = regName.getText();
-//                    newUser.password = regPass.getText();
-//                    newUser.email = regEmail.getText();
-//                    newUser.fullName = regFirstName.getText();
-//                    newUser.phoneNo = regPhoneNo.getText();
-//                    if (male.isSelected()) {
-//                        newUser.gender = "Male";
-//                    } else {
-//                        newUser.gender = "Female";
-//                    }
-//                    users.add(newUser);// database
-//                    goBack.setOpacity(1);
-//                    success.setOpacity(1);
-//                    makeDefault();
-//                    if (controlRegLabel.getOpacity() == 1) {
-//                        controlRegLabel.setOpacity(0);
-//                    }
-//                    if (nameExists.getOpacity() == 1) {
-//                        nameExists.setOpacity(0);
-//                    }
-//                } else {
-//                    checkEmail.setOpacity(1);
-//                    setOpacity(nameExists, goBack, controlRegLabel, success);
-//                }
-//            } else {
-//                nameExists.setOpacity(1);
-//                setOpacity(success, goBack, controlRegLabel, checkEmail);
-//            }
-//        } else {
-//            controlRegLabel.setOpacity(1);
-//            setOpacity(success, goBack, nameExists, checkEmail);
-//        }
+    public void registration() throws RemoteException {
+       if (!regName.getText().equalsIgnoreCase("")
+                && !regPass.getText().equalsIgnoreCase("")
+                && !regEmail.getText().equalsIgnoreCase("")
+                && !regFirstName.getText().equalsIgnoreCase("")
+                && !regPhoneNo.getText().equalsIgnoreCase("")
+                && (male.isSelected() || female.isSelected())) {
+            if(checkUser(regName.getText())) {
+                if(checkEmail(regEmail.getText())) {
+                    User u = new User();
+                    u.setFullName(regFirstName.getText());
+                    u.setEmail(regEmail.getText());
+                    u.setPassword(regPass.getText());
+                    u.setPhoneNumber(regPhoneNo.getText());
+                    if (male.isSelected()) {
+                        u.setGender("M");
+                    } else {
+                        u.setGender("F");
+                    }
+                    //Added user in DB
+                    serviceUser.addUser(u);
+                    goBack.setOpacity(1);
+                    success.setOpacity(1);
+                    makeDefault();
+                    if (controlRegLabel.getOpacity() == 1) {
+                        controlRegLabel.setOpacity(0);
+                    }
+                    if (nameExists.getOpacity() == 1) {
+                        nameExists.setOpacity(0);
+                    }
+                } else {
+                    checkEmail.setOpacity(1);
+                    setOpacity(nameExists, goBack, controlRegLabel, success);
+                }
+            } else {
+                nameExists.setOpacity(1);
+                setOpacity(success, goBack, controlRegLabel, checkEmail);
+            }
+        } else {
+            controlRegLabel.setOpacity(1);
+            setOpacity(success, goBack, nameExists, checkEmail);
+        }
 
         // register two users for testing
-        User newUser = new User();
+        /*User newUser = new User();
         newUser.name = "haitam";
         newUser.password = "123";
         newUser.email = "hh@hh";
@@ -127,21 +139,29 @@ public class Controller {
         newUser1.gender="male";
 
         users.add(newUser1);
-        users.add(newUser);
+        users.add(newUser);*/
 
     }
 
     public void login() {
-        username = userName.getText();
-        password = passWord.getText();
+        /*// At form openning
+        try {
+            chatController = (ChatController) Naming.lookup("rmi://localhost/1099/ob");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
+        users = (ArrayList<User>) serviceUser.getAllUsers();
+        String username = userName.getText();
+        String password = passWord.getText();
         boolean login = false;
         for (User x : users) {
-            System.out.println(x.name + " " + x.password);
-            if (x.name.equalsIgnoreCase(username) && x.password.equals(password)) {
+            System.out.println(x.getFullName() + " " + x.getPassword());
+            if (x.getFullName().equalsIgnoreCase(username) && x.getPassword().equals(password)) {
                 login = true;
+                //Created User
+                user = x;
                 loggedInUser.add(x);
-                System.out.println(x.name);
-                gender = x.gender;
+                System.out.println(x.getFullName());
                 break;
             }
         }
@@ -170,7 +190,7 @@ public class Controller {
 
     private boolean checkUser(String username) {
         for(User user : users) {
-            if(user.name.equalsIgnoreCase(username)) {
+            if(user.getFullName().equalsIgnoreCase(username)) {
                 return false;
             }
         }
@@ -179,7 +199,7 @@ public class Controller {
 
     private boolean checkEmail(String email) {
         for(User user : users) {
-            if(user.email.equalsIgnoreCase(email)) {
+            if(user.getEmail().equalsIgnoreCase(email)) {
                 return false;
             }
         }
@@ -204,7 +224,7 @@ public class Controller {
             URL url = file.toURI().toURL();
             Parent root = FXMLLoader.load(url);
             stage.setScene(new Scene(root));
-            stage.setTitle(username + "");
+            stage.setTitle(user.getFullName() + "");
             stage.setOnCloseRequest(event -> {
                 System.exit(0);
             });
