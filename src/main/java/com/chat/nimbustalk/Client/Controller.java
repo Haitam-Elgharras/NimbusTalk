@@ -75,8 +75,7 @@ public class Controller {
     public static ArrayList<User> loggedInUser = new ArrayList<>();
     public static  ArrayList<User>  users = new ArrayList<>();
 
-    //ChatController chatController;
-    IServiceUserImpl serviceUser = new IServiceUserImpl(new UserDaoImpl());
+    ChatController chatController;
 
     public void registration() throws RemoteException {
        if (!regName.getText().equalsIgnoreCase("")
@@ -98,7 +97,7 @@ public class Controller {
                         u.setGender("F");
                     }
                     //Added user in DB
-                    serviceUser.addUser(u);
+                    chatController.addUser(u);
                     goBack.setOpacity(1);
                     success.setOpacity(1);
                     makeDefault();
@@ -143,14 +142,15 @@ public class Controller {
 
     }
 
-    public void login() {
-        /*// At form openning
+    public void login() throws RemoteException {
+        //At form openning: creation of chatController instance from server side
         try {
             chatController = (ChatController) Naming.lookup("rmi://localhost/1099/ob");
+            System.out.println(chatController);
         } catch (Exception e) {
             e.printStackTrace();
-        }*/
-        users = (ArrayList<User>) serviceUser.getAllUsers();
+        }
+        users = (ArrayList<User>) chatController.getAllUsers();
         String username = userName.getText();
         String password = passWord.getText();
         boolean login = false;

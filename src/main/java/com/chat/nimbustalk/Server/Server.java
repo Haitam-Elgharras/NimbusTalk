@@ -1,15 +1,32 @@
 package com.chat.nimbustalk.Server;
 
+import com.chat.nimbustalk.Server.dao.Impl.MessageDaoImpl;
+import com.chat.nimbustalk.Server.dao.Impl.UserDaoImpl;
+import com.chat.nimbustalk.Server.rmi.ChatControllerImpl;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.rmi.Naming;
+import java.rmi.registry.LocateRegistry;
 import java.util.ArrayList;
 
 public class Server {
     private static final ArrayList<ClientHandler> clients = new ArrayList<>();
     public static void main(String[] args) {
+
+        try {
+            ChatControllerImpl c = new ChatControllerImpl(new MessageDaoImpl(), new UserDaoImpl());
+            System.out.println(c.getAllUsers().size());
+            LocateRegistry.createRegistry(1099);
+            Naming.rebind("rmi://localhost/1099/ob", c);
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
         Socket socket;
         try(
             ServerSocket serverSocket = new ServerSocket(8889)
