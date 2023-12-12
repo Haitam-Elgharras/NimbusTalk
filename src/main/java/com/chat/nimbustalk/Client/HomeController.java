@@ -86,6 +86,8 @@ public class HomeController extends Thread implements Initializable {
     @FXML
     private ScrollPane clientListScroll;
     @FXML
+    private ListView listView;
+    @FXML
     private VBox clientListBox;
 
     @FXML
@@ -301,37 +303,6 @@ public class HomeController extends Thread implements Initializable {
     }
 
     public void handleUserBoxClick(MouseEvent event) throws MalformedURLException {
-        // Get the user box that was clicked
-        HBox clickedUserBox = (HBox) event.getSource();
-        System.out.println(clickedUserBox.getId());
-
-        // File and URL creation for the stylesheet
-        File file = new File("src/main/java/com/chat/nimbustalk/Client/Css/style.css");
-        URL url = file.toURI().toURL();
-        String stylesheet = url.toExternalForm();
-
-        // Check if the stylesheet is already added
-        if (!clickedUserBox.getStylesheets().contains(stylesheet)) {
-            // Add the stylesheet only if it's not added before
-            clickedUserBox.getStylesheets().add(stylesheet);
-            System.out.println("Stylesheet added");
-            System.out.println(stylesheet);
-        } else {
-            System.out.println("Stylesheet already added");
-        }
-
-        // Iterate through all user boxes and update their style classes
-        for (Node node : userBoxContainer.getChildren()) {
-            if ((node instanceof HBox userBox) && !Objects.equals(node.getId(), "searchBox")) {
-                if (userBox == clickedUserBox) {
-                    userBox.getStyleClass().add("gray-background");
-                    System.out.println("Class added");
-                } else {
-                    userBox.getStyleClass().remove("gray-background");
-                    System.out.println("Class removed");
-                }
-            }
-        }
     }
 
 
@@ -340,72 +311,6 @@ public class HomeController extends Thread implements Initializable {
         emojiList.setVisible(!emojiList.isVisible());
     }
 
-//    public boolean updateUI(ArrayList<String> clientList) {
-//        Platform.runLater(() -> clientListBox.getChildren().clear());
-//
-//        // Create search box
-//        HBox searchBox = new HBox();
-//        searchBox.setAlignment(Pos.CENTER);
-//        searchBox.setPrefHeight(42.0);
-//        searchBox.setPrefWidth(200.0);
-//        searchBox.getStyleClass().add("search-box"); // Add appropriate style class
-//
-//        ImageView searchIcon = new ImageView(new Image("@../icons/icons8-search-50.png"));
-//        searchIcon.setFitHeight(26.0);
-//        searchIcon.setFitWidth(31.0);
-//        searchIcon.setPreserveRatio(true);
-//        HBox.setMargin(searchIcon, new Insets(0, 10.0, 0, 0));
-//
-//        TextField searchField = new TextField();
-//        searchField.setPrefHeight(31.0);
-//        searchField.setPrefWidth(190.0);
-//        searchField.setPromptText("Search");
-//        searchField.getStyleClass().add("transparent-background"); // Add appropriate style class
-//
-//        searchBox.getChildren().addAll(searchIcon, searchField);
-//
-//        // Add search box to clientListBox
-//        clientListBox.getChildren().add(searchBox);
-//
-//        // Create user boxes
-//        for (String client : clientList) {
-//            if (client.equals(this.username)) continue;
-//
-//            HBox container = new HBox();
-//            container.setAlignment(Pos.CENTER_LEFT);
-//            container.setSpacing(10);
-//            container.setPrefWidth(clientListBox.getPrefWidth());
-//            container.setPadding(new Insets(3));
-//            container.getStyleClass().add("online-user-container");
-//
-//            Circle img = new Circle(30, 30, 15);
-//            try {
-//                String path = new File("resources/user-images/userConv.png").toURI().toString();
-//                img.setFill(new ImagePattern(new Image(path)));
-//            } catch (Exception ex) {
-//                ex.printStackTrace(); // Handle exception appropriately
-//            }
-//            container.getChildren().add(img);
-//
-//            VBox userDetailContainer = new VBox();
-//            userDetailContainer.setPrefWidth(clientListBox.getPrefWidth() / 1.7);
-//            Label lblUsername = new Label(client);
-//            lblUsername.getStyleClass().add("online-label");
-//            userDetailContainer.getChildren().add(lblUsername);
-//
-//            Label lblMessage = new Label("No recent messages");
-//            lblMessage.getStyleClass().add("online-label-details"); // Add appropriate style class
-//            userDetailContainer.getChildren().add(lblMessage);
-//
-//            container.getChildren().add(userDetailContainer);
-//
-//            container.setOnMouseClicked(event -> handleUserBoxClick(client)); // Set the click event
-//
-//            clientListBox.getChildren().add(container);
-//        }
-//        return true;
-//    }
-//
 
     public boolean updateUI(ArrayList<String> clientList) {
         Platform.runLater(() -> {
@@ -517,6 +422,22 @@ public class HomeController extends Thread implements Initializable {
     // handle testUI button click event
     public void handleTestUI(MouseEvent event) {
         updateUI(Controller.users.stream().map(u -> u.name).collect(Collectors.toCollection(ArrayList::new)));
+    }
+
+
+    // handle list view click event
+    @FXML
+    public void handleListViewClick(MouseEvent event) {
+        // we click on the list view that contains HBoxes of users
+        // we need to get the HBox that we clicked on
+        HBox userBox = (HBox) listView.getSelectionModel().getSelectedItem();
+        if (userBox == null) return;
+        else
+        {
+            // get the username from the HBox that contains image view and Vbox
+            String username = ((Label) ((VBox) userBox.getChildren().get(1)).getChildren().get(0)).getText();
+            System.out.println("Clicked on " + username);
+        }
     }
 }
 
