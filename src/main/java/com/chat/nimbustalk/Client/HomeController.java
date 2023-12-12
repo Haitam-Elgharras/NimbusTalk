@@ -3,16 +3,15 @@ package com.chat.nimbustalk.Client;
 
 
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -23,6 +22,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 //import static Client.Controller.loggedInUser;
 //import static Client.Controller.users;
@@ -82,6 +83,13 @@ public class HomeController extends Thread implements Initializable {
     public ImageView btnEmoji;
     @FXML
     private TextFlow emojiList;
+    @FXML
+    private ScrollPane clientListScroll;
+    @FXML
+    private VBox clientListBox;
+
+    @FXML
+    private Button testUI;
     private FileChooser fileChooser;
     private File filePath;
     public boolean toggleChat = false, toggleProfile = false;
@@ -182,10 +190,16 @@ public class HomeController extends Thread implements Initializable {
 
     public boolean update(String username, String message) {
 
-        // if the message is sent by the current user, we must replace the username with "You" inside the message
+        String[] tokens = message.split(":");
+
+        if (username.equalsIgnoreCase(Controller.username) && tokens.length > 1 && tokens[1].startsWith("@")) {
+            tokens[0] = "You to " + tokens[1].substring(1) + " :";
+            tokens[1] ="";
+            message = String.join(" ", tokens);
+        }
+        else
         if (username.equalsIgnoreCase(Controller.username)) {
-            String[] tokens = message.split(" ");
-            tokens[0] = "You:";
+            tokens[0] = "You :";
             message = String.join(" ", tokens);
         }
 
@@ -277,7 +291,9 @@ public class HomeController extends Thread implements Initializable {
 
     public void sendPrivateMessage(String recipient, String message) {
         String fullMessage = Controller.username + ":" + recipient + ":" + message;
+        writer.println(fullMessage);
         update(Controller.username, fullMessage); // Use the update method here
+        // add to a database
         msgField.setText("");
         if (message.equalsIgnoreCase("BYE") || message.equalsIgnoreCase("logout")) {
             System.exit(0);
@@ -324,7 +340,184 @@ public class HomeController extends Thread implements Initializable {
         emojiList.setVisible(!emojiList.isVisible());
     }
 
+//    public boolean updateUI(ArrayList<String> clientList) {
+//        Platform.runLater(() -> clientListBox.getChildren().clear());
+//
+//        // Create search box
+//        HBox searchBox = new HBox();
+//        searchBox.setAlignment(Pos.CENTER);
+//        searchBox.setPrefHeight(42.0);
+//        searchBox.setPrefWidth(200.0);
+//        searchBox.getStyleClass().add("search-box"); // Add appropriate style class
+//
+//        ImageView searchIcon = new ImageView(new Image("@../icons/icons8-search-50.png"));
+//        searchIcon.setFitHeight(26.0);
+//        searchIcon.setFitWidth(31.0);
+//        searchIcon.setPreserveRatio(true);
+//        HBox.setMargin(searchIcon, new Insets(0, 10.0, 0, 0));
+//
+//        TextField searchField = new TextField();
+//        searchField.setPrefHeight(31.0);
+//        searchField.setPrefWidth(190.0);
+//        searchField.setPromptText("Search");
+//        searchField.getStyleClass().add("transparent-background"); // Add appropriate style class
+//
+//        searchBox.getChildren().addAll(searchIcon, searchField);
+//
+//        // Add search box to clientListBox
+//        clientListBox.getChildren().add(searchBox);
+//
+//        // Create user boxes
+//        for (String client : clientList) {
+//            if (client.equals(this.username)) continue;
+//
+//            HBox container = new HBox();
+//            container.setAlignment(Pos.CENTER_LEFT);
+//            container.setSpacing(10);
+//            container.setPrefWidth(clientListBox.getPrefWidth());
+//            container.setPadding(new Insets(3));
+//            container.getStyleClass().add("online-user-container");
+//
+//            Circle img = new Circle(30, 30, 15);
+//            try {
+//                String path = new File("resources/user-images/userConv.png").toURI().toString();
+//                img.setFill(new ImagePattern(new Image(path)));
+//            } catch (Exception ex) {
+//                ex.printStackTrace(); // Handle exception appropriately
+//            }
+//            container.getChildren().add(img);
+//
+//            VBox userDetailContainer = new VBox();
+//            userDetailContainer.setPrefWidth(clientListBox.getPrefWidth() / 1.7);
+//            Label lblUsername = new Label(client);
+//            lblUsername.getStyleClass().add("online-label");
+//            userDetailContainer.getChildren().add(lblUsername);
+//
+//            Label lblMessage = new Label("No recent messages");
+//            lblMessage.getStyleClass().add("online-label-details"); // Add appropriate style class
+//            userDetailContainer.getChildren().add(lblMessage);
+//
+//            container.getChildren().add(userDetailContainer);
+//
+//            container.setOnMouseClicked(event -> handleUserBoxClick(client)); // Set the click event
+//
+//            clientListBox.getChildren().add(container);
+//        }
+//        return true;
+//    }
+//
 
+    public boolean updateUI(ArrayList<String> clientList) {
+        Platform.runLater(() -> {
+            // Clear only user boxes, starting from index 2 (search box and separator)
+            ObservableList<Node> children = clientListBox.getChildren();
+            children.subList(2, children.size()).clear();
+
+            // Add user boxes dynamically
+            double layoutY = 0;
+            for (String client : clientList) {
+                if (Controller.username.equals(client)) continue;
+
+                HBox userBox = createUserBox(client, layoutY);
+                layoutY += 100; // Increment layoutY by 100 for the next user box
+
+                clientListBox.getChildren().add(userBox);
+                System.out.println("User box added");
+            }
+        });
+
+        return true;
+    }
+
+    private HBox createUserBox(String client, double layoutY) {
+        HBox userBox = new HBox();
+        userBox.getStyleClass().addAll("dark-gray-background", "user-box");
+        userBox.setPrefWidth(315);
+        userBox.setPrefHeight(100);
+        userBox.setLayoutX(0);
+        userBox.setLayoutY(layoutY);
+
+        ImageView userProfileImage = createImageView("icons/userConv.png", 60.0, 69.0);
+        VBox userDetails = createUserDetails(client);
+
+        userBox.getChildren().addAll(userProfileImage, userDetails, new Pane(), createCountCircle(14.0, Color.rgb(80, 201, 132), "1", 15.0));
+        HBox.setMargin(userProfileImage, new Insets(0, 0, 0, 20));
+        HBox.setMargin(userDetails, new Insets(0, 0, 0, 10));
+
+        return userBox;
+    }
+
+    private VBox createUserDetails(String client) {
+        VBox userDetails = new VBox();
+        userDetails.setPrefWidth(160);
+        userDetails.setPrefHeight(79);
+        userDetails.setLayoutX(0);
+
+        Label usernameLabel = createUsernameLabel(client);
+        Label lastMessageLabel = createLastMessageLabel();
+
+        userDetails.getChildren().addAll(usernameLabel, lastMessageLabel);
+        return userDetails;
+    }
+
+    private Label createUsernameLabel(String client) {
+        Label usernameLabel = new Label(client);
+        usernameLabel.setStyle("-fx-text-fill: WHITE;");
+        usernameLabel.setFont(new Font("Ebrima Bold", 20.0));
+        usernameLabel.setPrefWidth(148);
+        usernameLabel.setPrefHeight(32);
+        usernameLabel.setLayoutX(0);
+        usernameLabel.setLayoutY(18);
+
+        return usernameLabel;
+    }
+
+    private Label createLastMessageLabel() {
+        Label lastMessageLabel = new Label("You: see u");
+        lastMessageLabel.setStyle("-fx-text-fill: #9da7a7;");
+        lastMessageLabel.setFont(new Font("Ebrima", 18.0));
+        lastMessageLabel.setPrefWidth(193);
+        lastMessageLabel.setPrefHeight(32);
+        lastMessageLabel.setLayoutX(10);
+        lastMessageLabel.setLayoutY(50);
+
+        return lastMessageLabel;
+    }
+
+    private Pane createCountCircle(double radius, Color fill, String labelText, double labelFontSize) {
+        Pane countCircle = new Pane();
+        countCircle.setPrefWidth(101);
+        countCircle.setPrefHeight(79);
+        countCircle.setLayoutX(0);
+
+        Circle circle = new Circle(radius);
+        circle.setFill(fill);
+
+        Label countLabel = new Label(labelText);
+        countLabel.setStyle("-fx-text-fill: WHITE; -fx-font-size: " + labelFontSize + ";");
+
+        countCircle.getChildren().addAll(circle, countLabel);
+        return countCircle;
+    }
+
+    private ImageView createImageView(String imagePath, double fitHeight, double fitWidth) {
+        File file = new File("src/main/java/com/chat/nimbustalk/" + imagePath);
+        ImageView imageView = new ImageView(new Image(file.toURI().toString()));
+        imageView.setFitHeight(fitHeight);
+        imageView.setFitWidth(fitWidth);
+        imageView.setLayoutX(0);
+        imageView.setLayoutY(0);
+
+        return imageView;
+    }
+
+
+
+
+    // handle testUI button click event
+    public void handleTestUI(MouseEvent event) {
+        updateUI(Controller.users.stream().map(u -> u.name).collect(Collectors.toCollection(ArrayList::new)));
+    }
 }
 
 

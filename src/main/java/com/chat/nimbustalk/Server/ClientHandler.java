@@ -53,6 +53,7 @@ public class ClientHandler extends Thread {
 
                 // Handle the message based on whether it's private or public
                 if (recipient != null && !recipient.isEmpty()) {
+                    System.out.println("private message " + msg);
                     // It's a private message, find the appropriate client and send the message
                     for (ClientHandler cl : clients) {
                         if (cl.username.equalsIgnoreCase(recipient)) {
@@ -61,9 +62,12 @@ public class ClientHandler extends Thread {
                         }
                     }
                 } else {
-                    // Regular public message, broadcast to all clients
-                    for (ClientHandler cl : clients)
-                        cl.writer.println(msg);
+                    {
+                        System.out.println("public message " + msg);
+                        // Regular public message, broadcast to all clients
+                        for (ClientHandler cl : clients)
+                            cl.writer.println(msg);
+                    }
 
                 }
             }
