@@ -2,6 +2,7 @@ package com.chat.nimbustalk.Server.service.Impl;
 
 import com.chat.nimbustalk.Server.dao.Impl.MessageDaoImpl;
 import com.chat.nimbustalk.Server.dao.entities.Message;
+import com.chat.nimbustalk.Server.dao.entities.User;
 import com.chat.nimbustalk.Server.service.IMessageService;
 import java.util.List;
 
@@ -15,10 +16,15 @@ public class IServiceMessageImpl implements IMessageService {
         this.messageDao.save(m);
     }
     @Override
-    public List<Message> getAllProducts() {
+    public List<Message> getAllMessages() {
         return this.messageDao.getAll();
     }
     @Override
-    public Message getProductById(Integer id) {return this.messageDao.getById(id);}
+    public Message getMessageById(Integer id) {return this.messageDao.getById(id);}
 
+    @Override
+    public List<Message> getAllMessages(User sender, User receiver) {
+        return this.messageDao.getAll(sender,receiver);
     }
+
+}

@@ -1,5 +1,6 @@
 package com.chat.nimbustalk.Client;
 
+import com.chat.nimbustalk.Client.connector.ServerConnector;
 import com.chat.nimbustalk.Server.dao.Impl.MessageDaoImpl;
 import com.chat.nimbustalk.Server.dao.entities.Message;
 import com.chat.nimbustalk.Server.service.Impl.IServiceMessageImpl;
@@ -81,9 +82,6 @@ public class HomeController extends Thread implements Initializable {
     private FileChooser fileChooser;
     private File filePath;
     public boolean toggleChat = false, toggleProfile = false;
-
-    IServiceMessageImpl serviceMessage = new IServiceMessageImpl(new MessageDaoImpl());
-
 
     BufferedReader reader; // to read the messages from the server
     PrintWriter writer; // to write the messages to the server
@@ -282,7 +280,15 @@ public class HomeController extends Thread implements Initializable {
         m.setContent(message);
         m.setSender(Controller.user);
         m.setReceiver(Controller.user);
-        serviceMessage.addMessage(m);
+        try {
+            ServerConnector.getControler().addMessage(m);
+            for (Message mes: ServerConnector.getControler().getAllMessages(Controller.user,Controller.user)) {
+                System.out.println(mes.getContent());
+            };
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
         msgField.setText("");
         if (message.equalsIgnoreCase("BYE") || message.equalsIgnoreCase("logout")) {
             System.exit(0);

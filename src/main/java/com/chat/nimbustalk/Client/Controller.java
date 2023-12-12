@@ -1,9 +1,7 @@
 package com.chat.nimbustalk.Client;
-import com.chat.nimbustalk.Server.dao.Impl.MessageDaoImpl;
-import com.chat.nimbustalk.Server.dao.Impl.UserDaoImpl;
+
+import com.chat.nimbustalk.Client.connector.ServerConnector;
 import com.chat.nimbustalk.Server.rmi.ChatController;
-import com.chat.nimbustalk.Server.service.Impl.IServiceMessageImpl;
-import com.chat.nimbustalk.Server.service.Impl.IServiceUserImpl;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,10 +20,8 @@ import com.chat.nimbustalk.Server.dao.entities.User;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.Naming;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
@@ -75,8 +71,6 @@ public class Controller {
     public static ArrayList<User> loggedInUser = new ArrayList<>();
     public static  ArrayList<User>  users = new ArrayList<>();
 
-    ChatController chatController;
-
     public void registration() throws RemoteException {
        if (!regName.getText().equalsIgnoreCase("")
                 && !regPass.getText().equalsIgnoreCase("")
@@ -97,7 +91,7 @@ public class Controller {
                         u.setGender("F");
                     }
                     //Added user in DB
-                    chatController.addUser(u);
+                    ServerConnector.getControler().addUser(u);
                     goBack.setOpacity(1);
                     success.setOpacity(1);
                     makeDefault();
@@ -144,13 +138,8 @@ public class Controller {
 
     public void login() throws RemoteException {
         //At form openning: creation of chatController instance from server side
-        try {
-            chatController = (ChatController) Naming.lookup("rmi://localhost/1099/ob");
-            System.out.println(chatController);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        users = (ArrayList<User>) chatController.getAllUsers();
+
+        users = (ArrayList<User>) ServerConnector.getControler().getAllUsers();
         String username = userName.getText();
         String password = passWord.getText();
         boolean login = false;
