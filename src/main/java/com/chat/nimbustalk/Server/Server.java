@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 public class Server {
     private static final ArrayList<ClientHandler> clients = new ArrayList<>();
+    private static final ArrayList<String> users = new ArrayList<>();
     public static void main(String[] args) {
 
         try {
@@ -43,11 +44,18 @@ public class Server {
                 BufferedReader usernameReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 String username = usernameReader.readLine();
                 System.out.println("from the server " + username);
+                users.add(username);
 
                 // Create a new ClientHandler instance with the username
-                ClientHandler clientThread = new ClientHandler(socket, clients, username);
+                ClientHandler clientThread = new ClientHandler(socket, clients, username, users);
                 clients.add(clientThread);
                 clientThread.start();
+
+                // if a new client is bieng add send a message to all clients to update the list
+                for (ClientHandler cl : clients) {
+                    cl.writer.println("updateListOfUsers");
+                    System.out.println("updateListOfUsers" + cl.username);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
