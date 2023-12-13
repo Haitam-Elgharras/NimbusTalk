@@ -1,7 +1,7 @@
 package com.chat.nimbustalk.Client;
 
 import com.chat.nimbustalk.Client.connector.ServerConnector;
-import com.chat.nimbustalk.Server.rmi.ChatController;
+import com.chat.nimbustalk.Server.dao.entities.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,12 +16,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import com.chat.nimbustalk.Server.dao.entities.User;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
@@ -193,10 +190,8 @@ public class Controller {
             URL url = file.toURI().toURL();
             Parent root = FXMLLoader.load(url);
             stage.setScene(new Scene(root));
-            stage.setTitle(user.getFullName() + "");
-            stage.setOnCloseRequest(event -> {
-                System.exit(0);
-            });
+            stage.setTitle(user.getFullName());
+            stage.setOnCloseRequest(event -> System.exit(0));
             stage.setResizable(false);
             stage.show();
         } catch (IOException e) {

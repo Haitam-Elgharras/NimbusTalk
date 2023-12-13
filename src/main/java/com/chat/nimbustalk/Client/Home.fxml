@@ -5,6 +5,7 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -101,7 +102,7 @@ prefWidth="315.0" styleClass="gray-background" stylesheets="@../Css/style.css">-
 <!--                     </styleClass>-->
 <!--                  </HBox>-->
 <!--                  <Pane prefHeight="2.0" prefWidth="200.0" styleClass="dark-gray-background" stylesheets="@../Css/style.css" />-->
-<!--                  <HBox fx:id="userBox" alignment="CENTER_LEFT" onMouseClicked="#handleUserBoxClick" prefHeight="100.0" prefWidth="315.0" stylesheets="@../Css/style.css">-->
+<!--                  <HBox fx:id="userBox" alignment="CENTER_LEFT"  prefHeight="100.0" prefWidth="315.0" stylesheets="@../Css/style.css">-->
 <!--                     <children>-->
 <!--                        <ImageView fitHeight="60.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">-->
 <!--                           <image>-->
@@ -136,7 +137,7 @@ prefWidth="315.0" styleClass="gray-background" stylesheets="@../Css/style.css">-
 <!--                        <Insets />-->
 <!--                     </VBox.margin>-->
 <!--                  </HBox>-->
-<!--                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="94.0" onMouseClicked="#handleUserBoxClick" prefHeight="100.0" prefWidth="315.0" stylesheets="@../Css/style.css">-->
+<!--                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="94.0"  prefHeight="100.0" prefWidth="315.0" stylesheets="@../Css/style.css">-->
 <!--                     <children>-->
 <!--                        <ImageView fitHeight="60.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">-->
 <!--                           <image>-->
@@ -181,7 +182,7 @@ prefWidth="315.0" styleClass="gray-background" stylesheets="@../Css/style.css">-
 <!--                        <Insets />-->
 <!--                     </VBox.margin>-->
 <!--                  </HBox>-->
-<!--                  <HBox fx:id="userBox1" alignment="CENTER_LEFT" layoutX="10.0" layoutY="194.0" onMouseClicked="#handleUserBoxClick" prefHeight="100.0" prefWidth="315.0" styleClass="dark-gray-background" stylesheets="@../Css/style.css">-->
+<!--                  <HBox fx:id="userBox1" alignment="CENTER_LEFT" layoutX="10.0" layoutY="194.0"  prefHeight="100.0" prefWidth="315.0" styleClass="dark-gray-background" stylesheets="@../Css/style.css">-->
 <!--                     <children>-->
 <!--                        <ImageView fitHeight="60.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">-->
 <!--                           <image>-->
@@ -217,7 +218,7 @@ prefWidth="315.0" styleClass="gray-background" stylesheets="@../Css/style.css">-
 <!--                        <Insets left="2.0" />-->
 <!--                     </VBox.margin>-->
 <!--                  </HBox>-->
-<!--                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="294.0" onMouseClicked="#handleUserBoxClick" prefHeight="100.0" prefWidth="315.0" stylesheets="@../Css/style.css">-->
+<!--                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="294.0"  prefHeight="100.0" prefWidth="315.0" stylesheets="@../Css/style.css">-->
 <!--                     <children>-->
 <!--                        <ImageView fitHeight="60.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">-->
 <!--                           <image>-->
@@ -250,7 +251,7 @@ prefWidth="315.0" styleClass="gray-background" stylesheets="@../Css/style.css">-
 <!--                        <Pane prefHeight="79.0" prefWidth="101.0" />-->
 <!--                     </children>-->
 <!--                  </HBox>-->
-<!--                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="394.0" onMouseClicked="#handleUserBoxClick" prefHeight="100.0" prefWidth="315.0" stylesheets="@../Css/style.css">-->
+<!--                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="394.0"  prefHeight="100.0" prefWidth="315.0" stylesheets="@../Css/style.css">-->
 <!--                     <children>-->
 <!--                        <ImageView fitHeight="60.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">-->
 <!--                           <image>-->
@@ -286,7 +287,7 @@ prefWidth="315.0" styleClass="gray-background" stylesheets="@../Css/style.css">-
 <!--               </children>-->
 <!--            </VBox>-->
 
-            <ScrollPane fx:id="clientListScroll" prefHeight="700.0" prefWidth="316.0">
+            <ScrollPane fx:id="clientListScroll" prefHeight="698.0" prefWidth="316.0">
                <content>
                   <VBox fx:id="clientListBox" prefHeight="698.0" prefWidth="313.0" styleClass="gray-background" stylesheets="@../Css/style.css">
                      <children>
@@ -319,7 +320,11 @@ prefWidth="315.0" styleClass="gray-background" stylesheets="@../Css/style.css">-
                         </HBox>
                         <Pane prefHeight="2.0" prefWidth="200.0" styleClass="dark-gray-background" stylesheets="@../Css/style.css" />
 
-                        <HBox fx:id="userBox" alignment="CENTER_LEFT" onMouseClicked="#handleUserBoxClick" prefHeight="100.0" prefWidth="315.0" stylesheets="@../Css/style.css">
+                        <ListView fx:id="listView" prefHeight="616.0" prefWidth="294.0"
+                                  onMouseClicked="#handleListViewClick"
+                                  styleClass="gray-background" stylesheets="@../Css/style.css"
+                        >
+                        <HBox fx:id="userBox" alignment="CENTER_LEFT"  prefHeight="100.0" prefWidth="315.0">
                            <children>
                               <ImageView fitHeight="60.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -353,8 +358,11 @@ prefWidth="315.0" styleClass="gray-background" stylesheets="@../Css/style.css">-
                            <VBox.margin>
                               <Insets />
                            </VBox.margin>
+                              <cursor>
+                                 <Cursor fx:constant="HAND" />
+                              </cursor>
                         </HBox>
-                        <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="94.0" onMouseClicked="#handleUserBoxClick" prefHeight="100.0" prefWidth="315.0" stylesheets="@../Css/style.css">
+                        <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="94.0"  prefHeight="100.0" prefWidth="315.0" stylesheets="@../Css/style.css">
                            <children>
                               <ImageView fitHeight="60.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -398,8 +406,11 @@ prefWidth="315.0" styleClass="gray-background" stylesheets="@../Css/style.css">-
                            <VBox.margin>
                               <Insets />
                            </VBox.margin>
+                              <cursor>
+                                 <Cursor fx:constant="HAND" />
+                              </cursor>
                         </HBox>
-                        <HBox fx:id="userBox1" alignment="CENTER_LEFT" layoutX="10.0" layoutY="194.0" onMouseClicked="#handleUserBoxClick" prefHeight="100.0" prefWidth="315.0" styleClass="dark-gray-background" stylesheets="@../Css/style.css">
+                        <HBox  alignment="CENTER_LEFT" layoutX="10.0" layoutY="194.0"  prefHeight="100.0" prefWidth="315.0">
                            <children>
                               <ImageView fitHeight="60.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -434,9 +445,84 @@ prefWidth="315.0" styleClass="gray-background" stylesheets="@../Css/style.css">-
                            <VBox.margin>
                               <Insets left="2.0" />
                            </VBox.margin>
+                              <cursor>
+                                 <Cursor fx:constant="HAND" />
+                              </cursor>
                         </HBox>
+                        <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="294.0"  prefHeight="100.0" prefWidth="315.0" stylesheets="@../Css/style.css">
+                              <children>
+                                 <ImageView fitHeight="60.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                       <Image url="@../icons/userConv.png" />
+                                    </image>
+                                    <HBox.margin>
+                                       <Insets left="20.0" />
+                                    </HBox.margin>
+                                 </ImageView>
+                                 <VBox alignment="CENTER_LEFT" prefHeight="79.0" prefWidth="160.0">
+                                    <children>
+                                       <Label prefHeight="32.0" prefWidth="148.0" text="Omar" textFill="WHITE">
+                                          <font>
+                                             <Font name="Ebrima Bold" size="20.0" />
+                                          </font>
+                                       </Label>
+                                       <Label layoutX="10.0" layoutY="10.0" prefHeight="32.0" prefWidth="193.0" text="nice to meet u" textFill="#9da7a7">
+                                          <font>
+                                             <Font name="Ebrima Bold" size="18.0" />
+                                          </font>
+                                       </Label>
+                                    </children>
+                                    <opaqueInsets>
+                                       <Insets />
+                                    </opaqueInsets>
+                                    <HBox.margin>
+                                       <Insets left="10.0" />
+                                    </HBox.margin>
+                                 </VBox>
+                                 <Pane prefHeight="79.0" prefWidth="101.0" />
+                              </children>
+                              <cursor>
+                                 <Cursor fx:constant="HAND" />
+                              </cursor>
+                           </HBox>
+                        <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="294.0"  prefHeight="100.0" prefWidth="315.0" stylesheets="@../Css/style.css">
+                              <children>
+                                 <ImageView fitHeight="60.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                       <Image url="@../icons/userConv.png" />
+                                    </image>
+                                    <HBox.margin>
+                                       <Insets left="20.0" />
+                                    </HBox.margin>
+                                 </ImageView>
+                                 <VBox alignment="CENTER_LEFT" prefHeight="79.0" prefWidth="160.0">
+                                    <children>
+                                       <Label prefHeight="32.0" prefWidth="148.0" text="Omar" textFill="WHITE">
+                                          <font>
+                                             <Font name="Ebrima Bold" size="20.0" />
+                                          </font>
+                                       </Label>
+                                       <Label layoutX="10.0" layoutY="10.0" prefHeight="32.0" prefWidth="193.0" text="nice to meet u" textFill="#9da7a7">
+                                          <font>
+                                             <Font name="Ebrima Bold" size="18.0" />
+                                          </font>
+                                       </Label>
+                                    </children>
+                                    <opaqueInsets>
+                                       <Insets />
+                                    </opaqueInsets>
+                                    <HBox.margin>
+                                       <Insets left="10.0" />
+                                    </HBox.margin>
+                                 </VBox>
+                                 <Pane prefHeight="79.0" prefWidth="101.0" />
+                              </children>
+                              <cursor>
+                                 <Cursor fx:constant="HAND" />
+                              </cursor>
+                           </HBox>
 
-                        <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="294.0" onMouseClicked="#handleUserBoxClick" prefHeight="100.0" prefWidth="315.0" stylesheets="@../Css/style.css">
+                        <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="294.0"  prefHeight="100.0" prefWidth="315.0" stylesheets="@../Css/style.css">
                            <children>
                               <ImageView fitHeight="60.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -468,8 +554,11 @@ prefWidth="315.0" styleClass="gray-background" stylesheets="@../Css/style.css">-
                               </VBox>
                               <Pane prefHeight="79.0" prefWidth="101.0" />
                            </children>
+                              <cursor>
+                                 <Cursor fx:constant="HAND" />
+                              </cursor>
                         </HBox>
-                        <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="394.0" onMouseClicked="#handleUserBoxClick" prefHeight="100.0" prefWidth="315.0" stylesheets="@../Css/style.css">
+                        <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="394.0"  prefHeight="100.0" prefWidth="315.0" stylesheets="@../Css/style.css">
                            <children>
                               <ImageView fitHeight="60.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -501,8 +590,11 @@ prefWidth="315.0" styleClass="gray-background" stylesheets="@../Css/style.css">-
                               </VBox>
                               <Pane prefHeight="79.0" prefWidth="101.0" />
                            </children>
+                              <cursor>
+                                 <Cursor fx:constant="HAND" />
+                              </cursor>
                         </HBox>
-
+                        </ListView>
                      </children>
                   </VBox>
                </content>
@@ -576,6 +668,9 @@ prefWidth="315.0" styleClass="gray-background" stylesheets="@../Css/style.css">-
                                  <HBox.margin>
                                     <Insets left="10.0" />
                                  </HBox.margin>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
                               </ImageView>
                               <ImageView fitHeight="34.0" fitWidth="37.0" layoutX="292.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
