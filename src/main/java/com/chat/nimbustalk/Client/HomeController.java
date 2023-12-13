@@ -4,11 +4,9 @@ package com.chat.nimbustalk.Client;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -22,7 +20,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
@@ -32,8 +29,6 @@ import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -144,6 +139,20 @@ public class HomeController extends Thread implements Initializable {
             while (true) {
                 // 1. Read a line of text from the server(clientHandler)
                 String msg = reader.readLine();
+
+                if(msg.equalsIgnoreCase("updateListOfUsers")) {
+                    System.out.println("updateListOfUsers");
+                    // 2. Read the list of clients from the server
+                    Platform.runLater(() -> {
+                        // 2. Read the list of clients from the server
+                        // users from the database
+                        updateUsersList(Controller.users.stream().map(u -> {
+                            System.out.println("from home controller " + u.name);
+                            return u.name;
+                        }).collect(Collectors.toCollection(ArrayList::new)));
+                    });
+                    continue;
+                }
 
                 // 2. Split the message into tokens
                 String[] tokens = msg.split(" ");
@@ -302,126 +311,70 @@ public class HomeController extends Thread implements Initializable {
         }
     }
 
-    public void handleUserBoxClick(MouseEvent event) throws MalformedURLException {
-    }
-
-
     @FXML
     void emojiAction(MouseEvent event) {
         emojiList.setVisible(!emojiList.isVisible());
     }
 
 
-    public boolean updateUI(ArrayList<String> clientList) {
+    public boolean updateUsersList(ArrayList<String> clientList) {
+        System.out.println("called updateUsersList");
         Platform.runLater(() -> {
             // Clear only user boxes, starting from index 2 (search box and separator)
-            ObservableList<Node> children = clientListBox.getChildren();
-            children.subList(2, children.size()).clear();
+            ObservableList items = listView.getItems();
+            items.subList(0, items.size()).clear();
 
             // Add user boxes dynamically
             double layoutY = 0;
             for (String client : clientList) {
                 if (Controller.username.equals(client)) continue;
 
-                HBox userBox = createUserBox(client, layoutY);
+                HBox userBox = createUserBox(client);
+                assert userBox != null;
+                userBox.setLayoutY(layoutY);
                 layoutY += 100; // Increment layoutY by 100 for the next user box
 
-                clientListBox.getChildren().add(userBox);
-                System.out.println("User box added");
+                // Add the user box to the list view
+                listView.getItems().add(userBox);
+                System.out.println("Client added to the list view");
             }
         });
 
         return true;
     }
 
-    private HBox createUserBox(String client, double layoutY) {
-        HBox userBox = new HBox();
-        userBox.getStyleClass().addAll("dark-gray-background", "user-box");
-        userBox.setPrefWidth(315);
-        userBox.setPrefHeight(100);
-        userBox.setLayoutX(0);
-        userBox.setLayoutY(layoutY);
+    private HBox createUserBox(String client) {
 
-        ImageView userProfileImage = createImageView("icons/userConv.png", 60.0, 69.0);
-        VBox userDetails = createUserDetails(client);
+        File file = new File("src/main/java/com/chat/nimbustalk/Client/UserBox.fxml");
+        URL url;
+        try {
+             url = file.toURI().toURL();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+        FXMLLoader loader = new FXMLLoader(url);
 
-        userBox.getChildren().addAll(userProfileImage, userDetails, new Pane(), createCountCircle(14.0, Color.rgb(80, 201, 132), "1", 15.0));
-        HBox.setMargin(userProfileImage, new Insets(0, 0, 0, 20));
-        HBox.setMargin(userDetails, new Insets(0, 0, 0, 10));
+        try {
+            HBox userBox = loader.load();
 
-        return userBox;
+            // Access the controller of the loaded FXML
+            UserBoxController userBoxController = loader.getController();
+
+            // Call the non-static method on the instance
+            userBoxController.setUsername(client);
+
+            // You can now return this HBox and use it as needed
+            return userBox;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
-
-    private VBox createUserDetails(String client) {
-        VBox userDetails = new VBox();
-        userDetails.setPrefWidth(160);
-        userDetails.setPrefHeight(79);
-        userDetails.setLayoutX(0);
-
-        Label usernameLabel = createUsernameLabel(client);
-        Label lastMessageLabel = createLastMessageLabel();
-
-        userDetails.getChildren().addAll(usernameLabel, lastMessageLabel);
-        return userDetails;
-    }
-
-    private Label createUsernameLabel(String client) {
-        Label usernameLabel = new Label(client);
-        usernameLabel.setStyle("-fx-text-fill: WHITE;");
-        usernameLabel.setFont(new Font("Ebrima Bold", 20.0));
-        usernameLabel.setPrefWidth(148);
-        usernameLabel.setPrefHeight(32);
-        usernameLabel.setLayoutX(0);
-        usernameLabel.setLayoutY(18);
-
-        return usernameLabel;
-    }
-
-    private Label createLastMessageLabel() {
-        Label lastMessageLabel = new Label("You: see u");
-        lastMessageLabel.setStyle("-fx-text-fill: #9da7a7;");
-        lastMessageLabel.setFont(new Font("Ebrima", 18.0));
-        lastMessageLabel.setPrefWidth(193);
-        lastMessageLabel.setPrefHeight(32);
-        lastMessageLabel.setLayoutX(10);
-        lastMessageLabel.setLayoutY(50);
-
-        return lastMessageLabel;
-    }
-
-    private Pane createCountCircle(double radius, Color fill, String labelText, double labelFontSize) {
-        Pane countCircle = new Pane();
-        countCircle.setPrefWidth(101);
-        countCircle.setPrefHeight(79);
-        countCircle.setLayoutX(0);
-
-        Circle circle = new Circle(radius);
-        circle.setFill(fill);
-
-        Label countLabel = new Label(labelText);
-        countLabel.setStyle("-fx-text-fill: WHITE; -fx-font-size: " + labelFontSize + ";");
-
-        countCircle.getChildren().addAll(circle, countLabel);
-        return countCircle;
-    }
-
-    private ImageView createImageView(String imagePath, double fitHeight, double fitWidth) {
-        File file = new File("src/main/java/com/chat/nimbustalk/" + imagePath);
-        ImageView imageView = new ImageView(new Image(file.toURI().toString()));
-        imageView.setFitHeight(fitHeight);
-        imageView.setFitWidth(fitWidth);
-        imageView.setLayoutX(0);
-        imageView.setLayoutY(0);
-
-        return imageView;
-    }
-
-
 
 
     // handle testUI button click event
     public void handleTestUI(MouseEvent event) {
-        updateUI(Controller.users.stream().map(u -> u.name).collect(Collectors.toCollection(ArrayList::new)));
+        updateUsersList(Controller.users.stream().map(u -> u.name).collect(Collectors.toCollection(ArrayList::new)));
     }
 
 

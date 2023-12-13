@@ -67,76 +67,76 @@ public class Controller {
 
 
     public void registration() {
-//       if (!regName.getText().equalsIgnoreCase("")
-//                && !regPass.getText().equalsIgnoreCase("")
-//                && !regEmail.getText().equalsIgnoreCase("")
-//                && !regFirstName.getText().equalsIgnoreCase("")
-//                && !regPhoneNo.getText().equalsIgnoreCase("")
-//                && (male.isSelected() || female.isSelected())) {
-//            if(checkUser(regName.getText())) {
-//                if(checkEmail(regEmail.getText())) {
-//                    User newUser = new User();
-//                    newUser.name = regName.getText();
-//                    newUser.password = regPass.getText();
-//                    newUser.email = regEmail.getText();
-//                    newUser.fullName = regFirstName.getText();
-//                    newUser.phoneNo = regPhoneNo.getText();
-//                    if (male.isSelected()) {
-//                        newUser.gender = "Male";
-//                    } else {
-//                        newUser.gender = "Female";
-//                    }
-//                    users.add(newUser);// database
-//                    goBack.setOpacity(1);
-//                    success.setOpacity(1);
-//                    makeDefault();
-//                    if (controlRegLabel.getOpacity() == 1) {
-//                        controlRegLabel.setOpacity(0);
-//                    }
-//                    if (nameExists.getOpacity() == 1) {
-//                        nameExists.setOpacity(0);
-//                    }
-//                } else {
-//                    checkEmail.setOpacity(1);
-//                    setOpacity(nameExists, goBack, controlRegLabel, success);
-//                }
-//            } else {
-//                nameExists.setOpacity(1);
-//                setOpacity(success, goBack, controlRegLabel, checkEmail);
-//            }
-//        } else {
-//            controlRegLabel.setOpacity(1);
-//            setOpacity(success, goBack, nameExists, checkEmail);
-//        }
+       if (!regName.getText().equalsIgnoreCase("")
+                && !regPass.getText().equalsIgnoreCase("")
+                && !regEmail.getText().equalsIgnoreCase("")
+                && !regFirstName.getText().equalsIgnoreCase("")
+                && !regPhoneNo.getText().equalsIgnoreCase("")
+                && (male.isSelected() || female.isSelected())) {
+            if(checkUser(regName.getText())) {
+                if(checkEmail(regEmail.getText())) {
+                    User newUser = new User();
+                    newUser.name = regName.getText();
+                    newUser.password = regPass.getText();
+                    newUser.email = regEmail.getText();
+                    newUser.fullName = regFirstName.getText();
+                    newUser.phoneNo = regPhoneNo.getText();
+                    if (male.isSelected()) {
+                        newUser.gender = "Male";
+                    } else {
+                        newUser.gender = "Female";
+                    }
+                    users.add(newUser);// database
+                    goBack.setOpacity(1);
+                    success.setOpacity(1);
+                    makeDefault();
+                    if (controlRegLabel.getOpacity() == 1) {
+                        controlRegLabel.setOpacity(0);
+                    }
+                    if (nameExists.getOpacity() == 1) {
+                        nameExists.setOpacity(0);
+                    }
+                } else {
+                    checkEmail.setOpacity(1);
+                    setOpacity(nameExists, goBack, controlRegLabel, success);
+                }
+            } else {
+                nameExists.setOpacity(1);
+                setOpacity(success, goBack, controlRegLabel, checkEmail);
+            }
+        } else {
+            controlRegLabel.setOpacity(1);
+            setOpacity(success, goBack, nameExists, checkEmail);
+        }
 
-        // register two users for testing
-        User newUser = new User();
-        newUser.name = "haitam";
-        newUser.password = "123";
-        newUser.email = "hh@hh";
-        newUser.fullName = "Haitam";
-        newUser.phoneNo ="5121521";
-        newUser.gender="male";
-
-        User newUser1 = new User();
-        newUser1.name = "ilyas";
-        newUser1.password = "123";
-        newUser1.email = "hh@hh";
-        newUser1.fullName = "Haitam";
-        newUser1.phoneNo ="5121521";
-        newUser1.gender="male";
-
-        User newUser2 = new User();
-        newUser2.name = "youssef";
-        newUser2.password = "123";
-        newUser2.email = "hh@hh";
-        newUser2.fullName = "youssef";
-        newUser2.phoneNo ="5121521";
-        newUser2.gender="male";
-
-        users.add(newUser1);
-        users.add(newUser);
-        users.add(newUser2);
+//        // register two users for testing
+//        User newUser = new User();
+//        newUser.name = "haitam";
+//        newUser.password = "123";
+//        newUser.email = "hh@hh";
+//        newUser.fullName = "Haitam";
+//        newUser.phoneNo ="5121521";
+//        newUser.gender="male";
+//
+//        User newUser1 = new User();
+//        newUser1.name = "ilyas";
+//        newUser1.password = "123";
+//        newUser1.email = "hh@hh";
+//        newUser1.fullName = "Haitam";
+//        newUser1.phoneNo ="5121521";
+//        newUser1.gender="male";
+//
+//        User newUser2 = new User();
+//        newUser2.name = "youssef";
+//        newUser2.password = "123";
+//        newUser2.email = "hh@hh";
+//        newUser2.fullName = "youssef";
+//        newUser2.phoneNo ="5121521";
+//        newUser2.gender="male";
+//
+//        users.add(newUser1);
+//        users.add(newUser);
+//        users.add(newUser2);
 
     }
 
