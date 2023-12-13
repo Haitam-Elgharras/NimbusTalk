@@ -114,38 +114,10 @@ public class Controller {
             setOpacity(success, goBack, nameExists, checkEmail);
         }
 
-        // register two users for testing
-        /*User newUser = new User();
-        newUser.name = "haitam";
-        newUser.password = "123";
-        newUser.email = "hh@hh";
-        newUser.fullName = "Haitam";
-        newUser.phoneNo ="5121521";
-        newUser.gender="male";
-
-        User newUser1 = new User();
-        newUser1.name = "ilyas";
-        newUser1.password = "123";
-        newUser1.email = "hh@hh";
-        newUser1.fullName = "Haitam";
-        newUser1.phoneNo ="5121521";
-        newUser1.gender="male";
-
-        User newUser2 = new User();
-        newUser2.name = "youssef";
-        newUser2.password = "123";
-        newUser2.email = "hh@hh";
-        newUser2.fullName = "youssef";
-        newUser2.phoneNo ="5121521";
-        newUser2.gender="male";
-
-        users.add(newUser1);
-        users.add(newUser);*/
-
     }
 
     public void login() throws RemoteException {
-        //At form openning: creation of chatController instance from server side
+        //At form opening: creation of chatController instance from server side
 
         users = (ArrayList<User>) ServerConnector.getControler().getAllUsers();
         String username = userName.getText();
