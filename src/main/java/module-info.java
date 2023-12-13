@@ -5,7 +5,6 @@ module com.nimbus.nimbustalk {
     requires java.rmi;
 
     requires org.kordamp.bootstrapfx.core;
-    requires mysql.connector.java;
 
     opens com.chat.nimbustalk to javafx.fxml;
     exports com.chat.nimbustalk.Server;

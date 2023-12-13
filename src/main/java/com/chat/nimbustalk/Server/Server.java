@@ -1,8 +1,10 @@
 package com.chat.nimbustalk.Server;
 
+import com.chat.nimbustalk.Server.dao.Impl.GroupDaoImpl;
 import com.chat.nimbustalk.Server.dao.Impl.MessageDaoImpl;
 import com.chat.nimbustalk.Server.dao.Impl.UserDaoImpl;
 import com.chat.nimbustalk.Server.rmi.ChatControllerImpl;
+import com.chat.nimbustalk.Server.service.Impl.IServiceGroupImpl;
 import com.chat.nimbustalk.Server.service.Impl.IServiceMessageImpl;
 import com.chat.nimbustalk.Server.service.Impl.IServiceUserImpl;
 
@@ -20,7 +22,7 @@ public class Server {
     public static void main(String[] args) {
 
         try {
-            ChatControllerImpl c = new ChatControllerImpl(new IServiceUserImpl(new UserDaoImpl()), new IServiceMessageImpl(new MessageDaoImpl()));
+            ChatControllerImpl c = new ChatControllerImpl(new IServiceUserImpl(new UserDaoImpl()), new IServiceMessageImpl(new MessageDaoImpl()), new IServiceGroupImpl(new GroupDaoImpl()));
             LocateRegistry.createRegistry(1099);
             Naming.rebind("rmi://localhost/1099/ob", c);
         }
