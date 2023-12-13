@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
@@ -18,7 +19,6 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<?import java.lang.String?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1005.0" stylesheets="@../Css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chat.nimbustalk.Client.HomeController">
    <left>
       <HBox prefHeight="700.0" prefWidth="408.0" BorderPane.alignment="CENTER">
@@ -42,7 +42,7 @@
                         <Insets top="30.0" />
                      </VBox.margin>
                   </ImageView>
-                  <ImageView fitHeight="48.0" fitWidth="38.0" layoutX="37.0" layoutY="349.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="48.0" fitWidth="38.0" layoutX="37.0" layoutY="349.0" onMouseClicked="#openGroupFXML" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../icons/icons8-group-50.png" />
                      </image>
