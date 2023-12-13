@@ -131,6 +131,14 @@ public class Controller {
         newUser1.phoneNo ="5121521";
         newUser1.gender="male";
 
+        User newUser2 = new User();
+        newUser2.name = "youssef";
+        newUser2.password = "123";
+        newUser2.email = "hh@hh";
+        newUser2.fullName = "youssef";
+        newUser2.phoneNo ="5121521";
+        newUser2.gender="male";
+
         users.add(newUser1);
         users.add(newUser);*/
 
