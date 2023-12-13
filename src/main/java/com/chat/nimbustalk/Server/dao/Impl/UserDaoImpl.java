@@ -15,7 +15,8 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void save(User o) {
         try {
-            PreparedStatement pstm = DBConnection.getConnection().prepareStatement("Insert into User (fullName,email,password,gender,phoneNumber) values (?,?,?,?,?)");
+            PreparedStatement pstm = DBConnection.getConnection()
+                    .prepareStatement("Insert into User (fullName,email,password,gender,phoneNumber) values (?,?,?,?,?)");
             pstm.setString(1,o.getFullName());
             pstm.setString(2,o.getEmail());
             pstm.setString(3,o.getPassword());
