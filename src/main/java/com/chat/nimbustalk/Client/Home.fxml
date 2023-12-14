@@ -43,7 +43,7 @@
                         <Insets top="30.0" />
                      </VBox.margin>
                   </ImageView>
-                  <ImageView fitHeight="48.0" fitWidth="38.0" layoutX="37.0" layoutY="349.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="48.0" fitWidth="38.0" layoutX="37.0" layoutY="349.0" onMouseClicked="#openGroupFXML" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../icons/icons8-group-50.png" />
                      </image>

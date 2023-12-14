@@ -1,7 +1,6 @@
 package com.chat.nimbustalk.Client;
 
 import com.chat.nimbustalk.Client.connector.ServerConnector;
-import com.chat.nimbustalk.Server.dao.Impl.MessageDaoImpl;
 import com.chat.nimbustalk.Server.dao.entities.Message;
 import com.chat.nimbustalk.Server.dao.entities.User;
 import com.chat.nimbustalk.Server.service.Impl.IServiceMessageImpl;
@@ -12,6 +11,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -30,6 +31,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -407,6 +409,28 @@ public class HomeController extends Thread implements Initializable {
         updateUsersList(Controller.users.stream().map(User::getFullName).collect(Collectors.toCollection(ArrayList::new)));
     }
 
+    @FXML
+    private void openGroupFXML() {
+        try {
+            // Load the FXML file
+            File file = new File("src/main/java/com/chat/nimbustalk/Client/Group.fxml");
+            URL url = file.toURI().toURL();
+            Parent root = FXMLLoader.load(url);
+
+            // Create a new scene
+            Scene scene = new Scene(root);
+
+            // Create a new stage
+            Stage stage = new Stage();
+            stage.setTitle("Another FXML");
+            stage.setScene(scene);
+
+            // Show the stage
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     // handle list view click event
     @FXML
