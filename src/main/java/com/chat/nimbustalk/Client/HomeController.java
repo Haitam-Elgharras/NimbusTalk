@@ -35,6 +35,7 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -154,6 +155,12 @@ public class HomeController extends Thread implements Initializable {
                     System.out.println("updateListOfUsers");
                     // 2. Read the list of clients from the server
                     Platform.runLater(() -> {
+                        // read the new list of users from the server
+                        try {
+                            Controller.users = (ArrayList<User>) ServerConnector.getControler().getAllUsers();
+                        } catch (RemoteException e) {
+                            throw new RuntimeException(e);
+                        }
                         // 2. Read the list of clients from the server
                         // users from the database
                         updateUsersList(Controller.users.stream().map(u -> {

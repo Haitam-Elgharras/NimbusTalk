@@ -51,7 +51,7 @@ public class Server {
                 clients.add(clientThread);
                 clientThread.start();
 
-                // if a new client is bieng add send a message to all clients to update the list
+                // if a new client is being add send a message to all clients to update the list
                 for (ClientHandler cl : clients) {
                     cl.writer.println("updateListOfUsers");
                     System.out.println("updateListOfUsers" + cl.username);
