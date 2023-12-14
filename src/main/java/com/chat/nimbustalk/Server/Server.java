@@ -47,7 +47,7 @@ public class Server {
                 users.add(username);
 
                 // Create a new ClientHandler instance with the username
-                ClientHandler clientThread = new ClientHandler(socket, clients, username, users);
+                ClientHandler clientThread = new ClientHandler(socket, clients, username);
                 clients.add(clientThread);
                 clientThread.start();
 

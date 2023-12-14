@@ -50,6 +50,7 @@ public class ClientHandler extends Thread {
                 // Check if it's a private message
                 if (tokens.length > 1 && tokens[1].startsWith("@")) {
                     recipient = tokens[1].substring(1);
+                    System.out.println("recipient " + recipient);
                     actualMessage = msg.substring(sender.length() + recipient.length() + 3); //for : : and @
                     System.out.println("actual message " + actualMessage);
                 } else {

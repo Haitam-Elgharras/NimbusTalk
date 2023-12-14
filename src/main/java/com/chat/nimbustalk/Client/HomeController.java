@@ -289,9 +289,11 @@ public class HomeController extends Thread implements Initializable {
         String message = msgField.getText().trim();
 
         if (message.startsWith("@")) {
+            System.out.println("private message");
             int spaceIndex = message.indexOf(" ");
             if (spaceIndex != -1) {
                 recipient = message.substring(0, spaceIndex);
+                System.out.println("recipient from send " + recipient);
                 message = message.substring(spaceIndex + 1);
             }
         }
@@ -312,12 +314,16 @@ public class HomeController extends Thread implements Initializable {
 
     public void sendPrivateMessage(String recipient, String message) {
         String fullMessage = Controller.user.getFullName() + ":" + recipient + ":" + message;
+        System.out.println("full message " + fullMessage);
         update(Controller.user.getFullName(), fullMessage); // Use the update method here
         //Add message in DB
         Message m = new Message();
         m.setContent(message);
         m.setSender(Controller.user);
-        m.setReceiver(Controller.user);
+        String finalRecipient = recipient.substring(1);
+        User receiver = Controller.users.stream().filter(u -> u.getFullName().equals(finalRecipient)).findFirst().orElse(null);
+        m.setReceiver(receiver);
+
         try {
             ServerConnector.getControler().addMessage(m);
             for (Message mes: ServerConnector.getControler().getAllMessages(Controller.user,Controller.user)) {
