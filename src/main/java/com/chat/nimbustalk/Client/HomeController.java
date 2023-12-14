@@ -316,6 +316,8 @@ public class HomeController extends Thread implements Initializable {
         String fullMessage = Controller.user.getFullName() + ":" + recipient + ":" + message;
         System.out.println("full message " + fullMessage);
         update(Controller.user.getFullName(), fullMessage); // Use the update method here
+        // send messsage to the server
+        writer.println(fullMessage);
         //Add message in DB
         Message m = new Message();
         m.setContent(message);
