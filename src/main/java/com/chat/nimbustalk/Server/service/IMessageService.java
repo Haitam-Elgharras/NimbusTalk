@@ -9,6 +9,5 @@ public interface IMessageService {
     void addMessage(Message m);
     List<Message> getAllMessages();
     Message getMessageById(Integer id);
-
     List<Message> getAllMessages(User sender, User receiver);
 }
