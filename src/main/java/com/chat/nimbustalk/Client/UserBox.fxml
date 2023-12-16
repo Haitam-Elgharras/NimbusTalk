@@ -8,12 +8,13 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <?import javafx.scene.Cursor?>
 <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="315.0"
       xmlns="http://javafx.com/javafx/16"
       xmlns:fx="http://javafx.com/fxml/1" stylesheets="@../Css/style.css"
-        fx:controller="com.chat.nimbustalk.Client.UserBoxController"
+      fx:controller="com.chat.nimbustalk.Client.UserBoxController"
 >
     <children>
         <ImageView fitHeight="60.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">
@@ -26,6 +27,9 @@
         </ImageView>
         <VBox alignment="CENTER_LEFT" prefHeight="79.0" prefWidth="160.0">
             <children>
+                <!-- Hidden Text element to store the username -->
+                <Text fx:id="hiddenUsername" text="" visible="false"/>
+
                 <Label fx:id="usernameLabel" prefHeight="32.0" prefWidth="148.0" text="Imad" textFill="WHITE">
                     <font>
                         <Font name="Ebrima Bold" size="20.0" />

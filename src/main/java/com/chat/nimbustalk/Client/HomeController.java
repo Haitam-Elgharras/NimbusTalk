@@ -3,7 +3,6 @@ package com.chat.nimbustalk.Client;
 import com.chat.nimbustalk.Client.connector.ServerConnector;
 import com.chat.nimbustalk.Server.dao.entities.Message;
 import com.chat.nimbustalk.Server.dao.entities.User;
-import com.chat.nimbustalk.Server.service.Impl.IServiceMessageImpl;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,7 +15,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -38,11 +36,7 @@ import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URL;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
+import java.util.*;
 
 //import static Client.Controller.loggedInUser;
 //import static Client.Controller.users;
@@ -191,8 +185,6 @@ public class HomeController extends Thread implements Initializable {
                 // 5. Skip messages sent by the current user because they are already displayed
                 if (cmd.equalsIgnoreCase(Controller.user.getUsername())) {
                     {
-                        
-                        
                         continue;
                     }
                 } else if (fullMsg.toString().trim().equalsIgnoreCase("bye")) {
@@ -225,8 +217,6 @@ public class HomeController extends Thread implements Initializable {
     }
 
     public boolean update(String username, String message) {
-
-        
         String fullname = "";
         String[] tokens = message.split(":");
         fullname = tokens[0];
@@ -326,6 +316,7 @@ public class HomeController extends Thread implements Initializable {
             int spaceIndex = message.indexOf(" ");
             if (spaceIndex != -1) {
                 recipient = message.substring(0, spaceIndex);
+                System.out.println("recipient: from send method" + recipient);
                 
                 message = message.substring(spaceIndex + 1);
             }
@@ -333,8 +324,13 @@ public class HomeController extends Thread implements Initializable {
 
         if (recipient != null && !recipient.isEmpty()) {
             {
+                // retieve the full name of the recipient
+                String finalRecipient = recipient;
+                String fullname = Objects.requireNonNull(Controller.users.stream()
+                        .filter(u -> u.getUsername().equals(finalRecipient.substring(1)))
+                        .findFirst().orElse(null)).getFullName();
                 
-                sendPrivateMessage(recipient, message);
+                sendPrivateMessage(recipient, fullname, message);
             }
         } else {
             // Regular public message
@@ -349,8 +345,8 @@ public class HomeController extends Thread implements Initializable {
         }
     }
 
-    public void sendPrivateMessage(String recipient, String message) {
-        String fullMessage = Controller.user.getFullName() + ":" + recipient + ":" + message;
+    public void sendPrivateMessage(String recipient, String fullname, String message) {
+        String fullMessage = fullname + ":" + recipient + ":" + message;
         
         update(Controller.user.getUsername(), fullMessage); // Use the update method here
         // send message to the server
@@ -364,9 +360,6 @@ public class HomeController extends Thread implements Initializable {
         m.setReceiver(receiver);
         try {
             ServerConnector.getControler().addMessage(m);
-            for (Message mes: ServerConnector.getControler().getAllMessages(Controller.user,Controller.user)) {
-                
-            };
         }
         catch (Exception e){
             e.printStackTrace();
@@ -395,7 +388,7 @@ public class HomeController extends Thread implements Initializable {
             for (User client : userList) {
                 if (Controller.user.getUsername().equals(client.getUsername())) continue;
 
-                HBox userBox = createUserBox(client.getFullName());
+                HBox userBox = createUserBox(client);
                 assert userBox != null;
                 userBox.setLayoutY(layoutY);
                 layoutY += 100; // Increment layoutY by 100 for the next user box
@@ -409,7 +402,7 @@ public class HomeController extends Thread implements Initializable {
         return true;
     }
 
-    private HBox createUserBox(String client) {
+    private HBox createUserBox(User client) {
 
         File file = new File("src/main/java/com/chat/nimbustalk/Client/UserBox.fxml");
         URL url;
@@ -427,7 +420,8 @@ public class HomeController extends Thread implements Initializable {
             UserBoxController userBoxController = loader.getController();
 
             // Call the non-static method on the instance
-            userBoxController.setUsername(client);
+            userBoxController.setUsernameLabel(client.getFullName());
+            userBoxController.getHiddenUsername().setText(client.getUsername());
 
             // You can now return this HBox and use it as needed
             return userBox;
@@ -469,17 +463,46 @@ public class HomeController extends Thread implements Initializable {
     // handle list view click event
     @FXML
     public void handleListViewClick(MouseEvent event) {
-        // we click on the list view that contains HBoxes of users
-        // we need to get the HBox that we clicked on
         HBox userBox = (HBox) listView.getSelectionModel().getSelectedItem();
         if (userBox == null) return;
-        else
-        {
-            // get the username from the HBox that contains image view and Vbox
-            String username = ((Label) ((VBox) userBox.getChildren().get(1)).getChildren().get(0)).getText();
-            
+        else {
+            String userName = ((Text) ((VBox) userBox.getChildren().get(1)).getChildren().get(0)).getText();
+
+            User user = Controller.users.stream()
+                    .filter(u -> u.getUsername().equals(userName))
+                    .findFirst().orElse(null);
+
+            if (user != null) {
+                List<Message> messages = null;
+                try {
+                    messages = ServerConnector.getControler().getAllMessages(Controller.user, user);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
+
+                msgRoom.getChildren().clear();
+
+                // Check for null messages and created_at values
+                if (messages != null) {
+                    messages.stream()
+                            .filter((m)->{
+                                System.out.println("message" + m.getContent());
+                                System.out.println("message" + m.getCreated_at());
+                                return true;
+                            })
+                            .filter(m -> m.getCreated_at() != null)
+                            .sorted(Comparator.comparing(Message::getCreated_at))
+                            .forEach(m -> {
+                                String message = m.getSender().getFullName() + ": " + m.getContent();
+                                System.out.println(message);
+                                System.out.println("update called");
+                                update(m.getSender().getUsername(), message);
+                            });
+                }
+            }
         }
     }
+
 }
 
 

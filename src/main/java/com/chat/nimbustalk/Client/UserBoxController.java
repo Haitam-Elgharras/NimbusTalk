@@ -3,11 +3,15 @@ package com.chat.nimbustalk.Client;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 
 public class UserBoxController {
 
     @FXML
     private Label usernameLabel;
+
+    @FXML
+    private Text hiddenUsername; // Add this line
 
     @FXML
     private Label messageLabel;
@@ -18,8 +22,20 @@ public class UserBoxController {
     @FXML
     private Label countLabel;
 
-    public void setUsername(String username) {
+    public void setUsernameLabel(String username) {
         usernameLabel.setText(username);
+    }
+
+    public Label getUsernameLabel() {
+        return usernameLabel;
+    }
+
+    public Text getHiddenUsername() {
+        return hiddenUsername;
+    }
+
+    public void setHiddenUsername(Text hiddenUsername) {
+        this.hiddenUsername = hiddenUsername;
     }
 
 }

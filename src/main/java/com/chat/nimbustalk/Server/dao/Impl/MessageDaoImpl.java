@@ -30,7 +30,8 @@ public class MessageDaoImpl implements MessageDao {
     public Message getById(Integer id) {
         Message m = new Message();
         try {
-            PreparedStatement pstm = DBConnection.getConnection().prepareStatement("Select * from message where id = ?");
+            PreparedStatement pstm = DBConnection.getConnection()
+                            .prepareStatement("Select * from message where id = ?");
             pstm.setInt(1,id);
             ResultSet rs = pstm.executeQuery();
             while(rs.next()){
@@ -57,6 +58,8 @@ public class MessageDaoImpl implements MessageDao {
                 m.setContent(rs.getString(2));
                 m.setSender(new UserDaoImpl().getById(rs.getInt(3)));
                 m.setReceiver(new UserDaoImpl().getById(rs.getInt(4)));
+                m.setCreated_at(rs.getDate(5));
+
                 messages.add(m);
             }
         } catch (Exception e){
@@ -69,7 +72,8 @@ public class MessageDaoImpl implements MessageDao {
     public List<Message> getAll(User sender, User receiver) {
         ArrayList<Message> messages = new ArrayList<>();
         try {
-            PreparedStatement pstm = DBConnection.getConnection().prepareStatement("Select * from Message where (senderUser = ? or receiverUser = ?) and (senderUser = ? or receiverUser = ?)");
+            PreparedStatement pstm = DBConnection.getConnection()
+                    .prepareStatement("Select * from Message where (senderUser = ? or receiverUser = ?) and (senderUser = ? or receiverUser = ?)");
             pstm.setInt(1,sender.getId());
             pstm.setInt(2,sender.getId());
             pstm.setInt(3,receiver.getId());
@@ -81,6 +85,7 @@ public class MessageDaoImpl implements MessageDao {
                 m.setContent(rs.getString(2));
                 m.setSender(new UserDaoImpl().getById(rs.getInt(3)));
                 m.setReceiver(new UserDaoImpl().getById(rs.getInt(4)));
+                m.setCreated_at(rs.getDate(5));
                 messages.add(m);
             }
         } catch (Exception e){
