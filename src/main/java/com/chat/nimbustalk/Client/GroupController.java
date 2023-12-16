@@ -3,11 +3,11 @@ package com.chat.nimbustalk.Client;
 import com.chat.nimbustalk.Client.connector.ServerConnector;
 import com.chat.nimbustalk.Server.dao.entities.Group;
 import com.chat.nimbustalk.Server.dao.entities.User;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
@@ -19,20 +19,21 @@ public class GroupController implements Initializable {
     TextField groupeName;
 
     @FXML
-    VBox userList;
+    ListView userList;
 
     @FXML
     Button createButton;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        System.out.println(Controller.user.getId());
         try {
             for (User u: ServerConnector.getControler().getAllUsers()) {
                 if (u.getId() != Controller.user.getId()){
-                    userList.getChildren().add(new Label(u.getFullName()));
+                    userList.getItems().add(new Label(u.getFullName()));
+                    System.out.println(u.getFullName());
                 }
             }
+            userList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -42,6 +43,10 @@ public class GroupController implements Initializable {
     private void buttonHandler(){
         Group group = new Group();
         group.setName(groupeName.getText());
+        ObservableList<Label> selectedUsers = userList.getSelectionModel().getSelectedItems();
+        for (Label l:selectedUsers) {
+            System.out.println(l.getText());
+        }
         try {
             ServerConnector.getControler().addGroup(group);
         } catch (Exception e) {
