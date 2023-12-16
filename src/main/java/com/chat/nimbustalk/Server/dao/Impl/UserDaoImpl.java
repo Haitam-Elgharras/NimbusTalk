@@ -16,24 +16,27 @@ public class UserDaoImpl implements UserDao {
     public void save(User o) {
         try {
             PreparedStatement pstm = DBConnection.getConnection()
-                    .prepareStatement("Insert into User (fullName,email,password,gender,phoneNumber) values (?,?,?,?,?)");
-            pstm.setString(1,o.getFullName());
-            pstm.setString(2,o.getEmail());
-            pstm.setString(3,o.getPassword());
-            pstm.setString(4,o.getGender());
-            pstm.setString(5,o.getPhoneNumber());
+                    .prepareStatement("INSERT INTO User (username, fullName, email, password, gender, phoneNumber) VALUES (?, ?, ?, ?, ?, ?)");
+            pstm.setString(1, o.getUsername());  // Assuming you have a getUsername method in your User class
+            pstm.setString(2, o.getFullName());
+            pstm.setString(3, o.getEmail());
+            pstm.setString(4, o.getPassword());
+            pstm.setString(5, o.getGender());
+            pstm.setString(6, o.getPhoneNumber());
             pstm.executeUpdate();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
 
     @Override
     public User getById(Integer id) {
         User c = new User();
         try {
-            PreparedStatement pstm = DBConnection.getConnection().prepareStatement("Select * from User where id = ?");
+            PreparedStatement pstm = DBConnection.getConnection()
+                    .prepareStatement("Select * from User where id = ?");
             pstm.setInt(1,id);
             ResultSet rs = pstm.executeQuery();
             while(rs.next()){
@@ -43,6 +46,7 @@ public class UserDaoImpl implements UserDao {
                 c.setPassword(rs.getString(4));
                 c.setGender(rs.getString(5));
                 c.setPhoneNumber(rs.getString(6));
+                c.setUsername(rs.getString(7));
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -64,6 +68,7 @@ public class UserDaoImpl implements UserDao {
                 c.setPassword(rs.getString(4));
                 c.setGender(rs.getString(5));
                 c.setPhoneNumber(rs.getString(6));
+                c.setUsername(rs.getString(7));
                 clients.add(c);
             }
         } catch (Exception e){

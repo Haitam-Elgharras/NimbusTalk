@@ -124,7 +124,7 @@ public class HomeController extends Thread implements Initializable {
         try {
             // 1. Create a Socket object and connect to the server Socket(server ip, port number)
             socket = new Socket("localhost", 8889);
-            System.out.println("Socket is connected with server!");
+            
 
             // 2. Create a BufferedReader to read data from the server
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -133,7 +133,13 @@ public class HomeController extends Thread implements Initializable {
             writer = new PrintWriter(socket.getOutputStream(), true);
 
             // 4. Send the username to the server
-            writer.println(Controller.user.getFullName());
+            //            writer.println(Controller.user.getFullName());
+
+
+            // instead of sending the username to the server we will send the id
+            writer.println(Controller.user.getUsername());
+            
+            
 
 
             // 5. Start a new thread for background communication
@@ -154,7 +160,7 @@ public class HomeController extends Thread implements Initializable {
                 String msg = reader.readLine();
 
                 if(msg.equalsIgnoreCase("updateListOfUsers")) {
-                    System.out.println("updateListOfUsers");
+                    
                     // 2. Read the list of clients from the server
                     Platform.runLater(() -> {
                         // read the new list of users from the server
@@ -163,33 +169,32 @@ public class HomeController extends Thread implements Initializable {
                         } catch (RemoteException e) {
                             throw new RuntimeException(e);
                         }
-                        // 2. Read the list of clients from the server
                         // users from the database
-                        updateUsersList(Controller.users.stream().map(u -> {
-                            System.out.println("from home controller " + u.getFullName());
-                            return u.getFullName();
-                        }).collect(Collectors.toCollection(ArrayList::new)));
+                        updateUsersList(Controller.users);
                     });
                     continue;
                 }
 
                 // 2. Split the message into tokens
-                String[] tokens = msg.split(" ");
+                String[] tokens = msg.split(":");
                 String cmd = tokens[0];
 
                 // 3. Extract the full message (excluding the command)
                 StringBuilder fullMsg = new StringBuilder();
-                for (int i = 1; i < tokens.length; i++) {
-                    fullMsg.append(tokens[i]).append(" ");
-                }
+                String tokenToAppend = tokens.length > 2 ? tokens[1]+":"+tokens[2] : tokens[1];
+                fullMsg.append(tokenToAppend);
 
                 // 4. Print the command and the full message
-                System.out.println(cmd);
-                System.out.println(fullMsg);
+                
+                
 
                 // 5. Skip messages sent by the current user because they are already displayed
-                if (cmd.equalsIgnoreCase(Controller.user.getFullName() + ":")) {
-                    continue;
+                if (cmd.equalsIgnoreCase(Controller.user.getUsername())) {
+                    {
+                        
+                        
+                        continue;
+                    }
                 } else if (fullMsg.toString().trim().equalsIgnoreCase("bye")) {
                     // 6. If the message indicates "bye," exit the loop and close resources
                     break;
@@ -198,6 +203,7 @@ public class HomeController extends Thread implements Initializable {
                 // 7. Call the update method to update the UI
                 Platform.runLater(() -> {
                     try {
+                        
                         update(cmd, fullMsg.toString().trim());
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -220,17 +226,30 @@ public class HomeController extends Thread implements Initializable {
 
     public boolean update(String username, String message) {
 
+        
+        String fullname = "";
         String[] tokens = message.split(":");
+        fullname = tokens[0];
 
-        if (username.equalsIgnoreCase(Controller.user.getFullName()) && tokens.length > 1 && tokens[1].startsWith("@")) {
-            tokens[0] = "You to " + tokens[1].substring(1) + " :";
+        boolean isPrivate = Controller.user.getUsername().equalsIgnoreCase(username) && tokens.length > 1 && tokens[1].startsWith("@");
+
+        if (isPrivate) {
+            tokens[0] = "You to " + tokens[0] + " :";
             tokens[1] ="";
             message = String.join(" ", tokens);
         }
         else
-        if (username.equalsIgnoreCase(Controller.user.getFullName())) {
+        if (Controller.user.getUsername().equalsIgnoreCase(username)) {
             tokens[0] = "You :";
             message = String.join(" ", tokens);
+        }
+
+        if(!Controller.user.getUsername().equalsIgnoreCase(username) && message.split(":").length == 2){
+                message = message.split(":")[1];
+        }
+
+        if(username.contains("(private")){
+            fullname = username;
         }
 
         Text text = new Text(message);
@@ -238,8 +257,11 @@ public class HomeController extends Thread implements Initializable {
         text.setFill(Color.WHITE);
         text.getStyleClass().add("message");
         TextFlow tempFlow = new TextFlow();
-        if (!Controller.user.getFullName().equals(username)) {
-            Text txtName = new Text(username + "\n");
+
+        if (!Controller.user.getUsername().equalsIgnoreCase(username)) {
+            
+
+            Text txtName = new Text(fullname + "\n");
             txtName.getStyleClass().add("txtName");
             tempFlow.getChildren().add(txtName);
         }
@@ -260,10 +282,12 @@ public class HomeController extends Thread implements Initializable {
         }
         img.getStyleClass().add("imageView");
 
-        if (!Controller.user.getFullName().equals(username)) {
+        if (!Controller.user.getUsername().equalsIgnoreCase(username)) {
+            
+            
             tempFlow.getStyleClass().add("tempFlowFlipped");
             flow.getStyleClass().add("textFlowFlipped");
-            msgRoom.setAlignment(Pos.TOP_LEFT); // Use msgRoom instead of chatBox
+            msgRoom.setAlignment(Pos.TOP_LEFT);
             hbox.setAlignment(Pos.CENTER_LEFT);
             hbox.getChildren().add(img);
             hbox.getChildren().add(flow);
@@ -298,22 +322,26 @@ public class HomeController extends Thread implements Initializable {
         String message = msgField.getText().trim();
 
         if (message.startsWith("@")) {
-            System.out.println("private message");
+            
             int spaceIndex = message.indexOf(" ");
             if (spaceIndex != -1) {
                 recipient = message.substring(0, spaceIndex);
-                System.out.println("recipient from send " + recipient);
+                
                 message = message.substring(spaceIndex + 1);
             }
         }
 
         if (recipient != null && !recipient.isEmpty()) {
-            sendPrivateMessage(recipient, message);
+            {
+                
+                sendPrivateMessage(recipient, message);
+            }
         } else {
             // Regular public message
             String fullMessage = Controller.user.getFullName() + ": " + message;
-            writer.println(fullMessage);
-            update(Controller.user.getFullName(), fullMessage); // Use the update method here
+            
+            writer.println(Controller.user.getUsername() + ":" + fullMessage);
+            update(Controller.user.getUsername(), fullMessage); // Use the update method here
             msgField.setText("");
             if (message.equalsIgnoreCase("BYE") || message.equalsIgnoreCase("logout")) {
                 System.exit(0);
@@ -323,22 +351,21 @@ public class HomeController extends Thread implements Initializable {
 
     public void sendPrivateMessage(String recipient, String message) {
         String fullMessage = Controller.user.getFullName() + ":" + recipient + ":" + message;
-        System.out.println("full message " + fullMessage);
-        update(Controller.user.getFullName(), fullMessage); // Use the update method here
-        // send messsage to the server
+        
+        update(Controller.user.getUsername(), fullMessage); // Use the update method here
+        // send message to the server
         writer.println(fullMessage);
         //Add message in DB
         Message m = new Message();
         m.setContent(message);
         m.setSender(Controller.user);
         String finalRecipient = recipient.substring(1);
-        User receiver = Controller.users.stream().filter(u -> u.getFullName().equals(finalRecipient)).findFirst().orElse(null);
+        User receiver = Controller.users.stream().filter(u -> u.getUsername().equals(finalRecipient)).findFirst().orElse(null);
         m.setReceiver(receiver);
-
         try {
             ServerConnector.getControler().addMessage(m);
             for (Message mes: ServerConnector.getControler().getAllMessages(Controller.user,Controller.user)) {
-                System.out.println(mes.getContent());
+                
             };
         }
         catch (Exception e){
@@ -356,8 +383,8 @@ public class HomeController extends Thread implements Initializable {
     }
 
 
-    public boolean updateUsersList(ArrayList<String> clientList) {
-        System.out.println("called updateUsersList");
+    public boolean updateUsersList(ArrayList<User> userList) {
+        
         Platform.runLater(() -> {
             // Clear only user boxes, starting from index 2 (search box and separator)
             ObservableList items = listView.getItems();
@@ -365,17 +392,17 @@ public class HomeController extends Thread implements Initializable {
 
             // Add user boxes dynamically
             double layoutY = 0;
-            for (String client : clientList) {
-                if (Controller.user.getFullName().equals(client)) continue;
+            for (User client : userList) {
+                if (Controller.user.getUsername().equals(client.getUsername())) continue;
 
-                HBox userBox = createUserBox(client);
+                HBox userBox = createUserBox(client.getFullName());
                 assert userBox != null;
                 userBox.setLayoutY(layoutY);
                 layoutY += 100; // Increment layoutY by 100 for the next user box
 
                 // Add the user box to the list view
                 listView.getItems().add(userBox);
-                System.out.println("Client added to the list view");
+                
             }
         });
 
@@ -413,7 +440,7 @@ public class HomeController extends Thread implements Initializable {
 
     // handle testUI button click event
     public void handleTestUI(MouseEvent event) {
-        updateUsersList(Controller.users.stream().map(User::getFullName).collect(Collectors.toCollection(ArrayList::new)));
+        updateUsersList(Controller.users);
     }
 
     @FXML
@@ -450,7 +477,7 @@ public class HomeController extends Thread implements Initializable {
         {
             // get the username from the HBox that contains image view and Vbox
             String username = ((Label) ((VBox) userBox.getChildren().get(1)).getChildren().get(0)).getText();
-            System.out.println("Clicked on " + username);
+            
         }
     }
 }
