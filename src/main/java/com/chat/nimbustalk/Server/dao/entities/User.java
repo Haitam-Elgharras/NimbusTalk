@@ -3,6 +3,7 @@ import java.io.Serializable;
 public class User implements Serializable {
     private int id;
     private String fullName;
+    private String userName;
 
     private String email;
 
@@ -58,5 +59,13 @@ public class User implements Serializable {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getUsername() {
+        return userName;
+    }
+
+    public void setUsername(String userName) {
+        this.userName = userName;
     }
 }

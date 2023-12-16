@@ -30,7 +30,7 @@ public class Server {
             Naming.rebind("rmi://localhost/1099/ob", c);
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
+            
         }
 
         Socket socket;
@@ -39,16 +39,22 @@ public class Server {
             )
         {
             while(true) {
-                System.out.println("Waiting for clients...");
+                
                 socket = serverSocket.accept(); // the method blocks until a client connects
-                System.out.println("Connected");
+                
 
                 // Read the username from the client
-                // TODO: move this to the ClientHandler class cause it's blocking code
+                // TODO 1: move this to the ClientHandler class cause it's blocking code
+                // TODO 2: we shouldn't depend on the username instead we should do on the id
+                //  look at the problem when the name is duplicated or the name has two parts
+//                BufferedReader usernameReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+//                String username = usernameReader.readLine();
+//                
+//                users.add(username);
+                // we will read the user id from the client
                 BufferedReader usernameReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 String username = usernameReader.readLine();
-                System.out.println("from the server " + username);
-                users.add(username);
+                
 
                 // Create a new ClientHandler instance with the username
                 ClientHandler clientThread = new ClientHandler(socket, clients, username);
@@ -58,7 +64,7 @@ public class Server {
                 // if a new client is being add send a message to all clients to update the list
                 for (ClientHandler cl : clients) {
                     cl.writer.println("updateListOfUsers");
-                    System.out.println("updateListOfUsers" + cl.username);
+                    
                 }
             }
         } catch (IOException e) {

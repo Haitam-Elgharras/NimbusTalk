@@ -69,6 +69,8 @@ public class Controller {
     public static  ArrayList<User>  users = new ArrayList<>();
 
     public void registration() throws RemoteException {
+        users = (ArrayList<User>) ServerConnector.getControler().getAllUsers();
+
        if (!regName.getText().equalsIgnoreCase("")
                 && !regPass.getText().equalsIgnoreCase("")
                 && !regEmail.getText().equalsIgnoreCase("")
@@ -82,6 +84,8 @@ public class Controller {
                     u.setEmail(regEmail.getText());
                     u.setPassword(regPass.getText());
                     u.setPhoneNumber(regPhoneNo.getText());
+                    u.setUsername(regName.getText());
+                    
                     if (male.isSelected()) {
                         u.setGender("M");
                     } else {
@@ -119,15 +123,21 @@ public class Controller {
         users = (ArrayList<User>) ServerConnector.getControler().getAllUsers();
         String username = userName.getText();
         String password = passWord.getText();
+        if(username.equalsIgnoreCase("") || password.equalsIgnoreCase("")) {
+            
+            
+            loginNotifier.setOpacity(1);
+            return;
+        }
         boolean login = false;
         for (User x : users) {
-            System.out.println(x.getFullName() + " " + x.getPassword());
-            if (x.getFullName().equalsIgnoreCase(username) && x.getPassword().equals(password)) {
+            
+            if (x.getUsername().equalsIgnoreCase(username) && x.getPassword().equals(password)) {
                 login = true;
                 //Created User
                 user = x;
                 loggedInUser.add(x);
-                System.out.println(x.getFullName());
+                
                 break;
             }
         }
@@ -156,7 +166,7 @@ public class Controller {
 
     private boolean checkUser(String username) {
         for(User user : users) {
-            if(user.getFullName().equalsIgnoreCase(username)) {
+            if(user.getUsername().equalsIgnoreCase(username)) {
                 return false;
             }
         }
