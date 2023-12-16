@@ -3,6 +3,7 @@ package com.chat.nimbustalk.Server.dao.Impl;
 import com.chat.nimbustalk.Server.dao.DBConnection;
 import com.chat.nimbustalk.Server.dao.GroupDao;
 import com.chat.nimbustalk.Server.dao.entities.Group;
+import com.chat.nimbustalk.Server.dao.entities.User;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -55,5 +56,22 @@ public class GroupDaoImpl implements GroupDao {
             e.printStackTrace();
         }
         return groups;
+    }
+
+    @Override
+    public Group getGroupByName(String name) {
+        Group group = new Group();
+        try {
+            PreparedStatement pstm = DBConnection.getConnection().prepareStatement("Select * from groupe where name = ?");
+            pstm.setString(1,name);
+            ResultSet rs = pstm.executeQuery();
+            while(rs.next()){
+                group.setId(rs.getInt(1));
+                group.setName(rs.getString(2));
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return group;
     }
 }

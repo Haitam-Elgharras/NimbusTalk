@@ -5,8 +5,10 @@ import com.chat.nimbustalk.Server.dao.Impl.UserDaoImpl;
 import com.chat.nimbustalk.Server.dao.entities.Group;
 import com.chat.nimbustalk.Server.dao.entities.Message;
 import com.chat.nimbustalk.Server.dao.entities.User;
+import com.chat.nimbustalk.Server.dao.entities.UserGroup;
 import com.chat.nimbustalk.Server.service.Impl.IServiceGroupImpl;
 import com.chat.nimbustalk.Server.service.Impl.IServiceMessageImpl;
+import com.chat.nimbustalk.Server.service.Impl.IServiceUserGroupImpl;
 import com.chat.nimbustalk.Server.service.Impl.IServiceUserImpl;
 
 import java.rmi.Naming;
@@ -20,11 +22,14 @@ public class ChatControllerImpl extends UnicastRemoteObject implements ChatContr
     private IServiceUserImpl serviceUser;
     private IServiceGroupImpl serviceGroup;
 
-    public ChatControllerImpl(IServiceUserImpl serviceUser, IServiceMessageImpl serviceMessage, IServiceGroupImpl serviceGroup) throws RemoteException {
+    private IServiceUserGroupImpl serviceUserGroup;
+
+    public ChatControllerImpl(IServiceUserImpl serviceUser, IServiceMessageImpl serviceMessage, IServiceGroupImpl serviceGroup, IServiceUserGroupImpl serviceUserGroup) throws RemoteException {
         super();
         this.serviceUser = serviceUser;
         this.serviceMessage = serviceMessage;
         this.serviceGroup = serviceGroup;
+        this.serviceUserGroup = serviceUserGroup;
     }
     @Override
     public void addMessage(Message m) throws RemoteException {
@@ -55,6 +60,11 @@ public class ChatControllerImpl extends UnicastRemoteObject implements ChatContr
     }
 
     @Override
+    public User getUserByUsername(String username) throws RemoteException {
+        return this.serviceUser.getUserByUsername(username);
+    }
+
+    @Override
     public List<Message> getAllMessages(User sender, User receiver) throws RemoteException {
         return this.serviceMessage.getAllMessages(sender,receiver);
     }
@@ -72,6 +82,27 @@ public class ChatControllerImpl extends UnicastRemoteObject implements ChatContr
     @Override
     public Group getGroupById(Integer id) throws RemoteException {
         return this.serviceGroup.getGroupById(id);
+    }
+
+    @Override
+    public Group getGroupByName(String name) throws RemoteException {
+        return this.serviceGroup.getGroupByName(name);
+    }
+
+
+    @Override
+    public void addUserToGroup(UserGroup u) throws RemoteException {
+        this.serviceUserGroup.addUserToGroup(u);
+    }
+
+    @Override
+    public List<Group> getGroupsByUser(User user) throws RemoteException {
+        return this.serviceUserGroup.getGroupsByUser(user);
+    }
+
+    @Override
+    public List<User> getUsersByGroup(Group group) throws RemoteException {
+        return this.serviceUserGroup.getUsersByGroup(group);
     }
 
 }

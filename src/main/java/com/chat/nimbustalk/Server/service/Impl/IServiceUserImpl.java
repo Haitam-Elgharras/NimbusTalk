@@ -27,4 +27,7 @@ public class IServiceUserImpl implements IUserService {
         return this.userDao.getById(id);
     }
 
+    @Override
+    public User getUserByUsername(String username){return this.userDao.getUserByUsername(username);}
+
 }

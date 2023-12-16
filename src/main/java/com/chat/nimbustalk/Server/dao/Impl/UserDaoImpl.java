@@ -71,4 +71,25 @@ public class UserDaoImpl implements UserDao {
         }
         return clients;
     }
+
+    @Override
+    public User getUserByUsername(String username) {
+        User c = new User();
+        try {
+            PreparedStatement pstm = DBConnection.getConnection().prepareStatement("Select * from User where fullName = ?");
+            pstm.setString(1,username);
+            ResultSet rs = pstm.executeQuery();
+            while(rs.next()){
+                c.setId(rs.getInt(1));
+                c.setFullName(rs.getString(2));
+                c.setEmail(rs.getString(3));
+                c.setPassword(rs.getString(4));
+                c.setGender(rs.getString(5));
+                c.setPhoneNumber(rs.getString(6));
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return c;
+    }
 }

@@ -3,6 +3,7 @@ package com.chat.nimbustalk.Server.rmi;
 import com.chat.nimbustalk.Server.dao.entities.Group;
 import com.chat.nimbustalk.Server.dao.entities.Message;
 import com.chat.nimbustalk.Server.dao.entities.User;
+import com.chat.nimbustalk.Server.dao.entities.UserGroup;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -20,10 +21,17 @@ public interface ChatController extends Remote {
     void addUser(User u) throws RemoteException;
     List<User> getAllUsers() throws RemoteException;
     User getUserById(Integer id) throws RemoteException;
+    User getUserByUsername(String username) throws RemoteException;
 
     //Group Functions
     void addGroup(Group group) throws RemoteException;
     List<Group> getAllGroups() throws RemoteException;
     Group getGroupById(Integer id) throws RemoteException;
+    Group getGroupByName(String name) throws RemoteException;
+
+    //UserGroup Functions
+    void addUserToGroup(UserGroup u) throws RemoteException;
+    List<Group> getGroupsByUser(User user) throws RemoteException;
+    List<User> getUsersByGroup(Group group) throws RemoteException;
 
 }
