@@ -10,6 +10,10 @@ public class Message implements Serializable {
     private User receiver;
     private Date created_at;
 
+    private Group group;
+
+    private boolean is_groupe_message;
+
     public int getId() {
         return id;
     }
@@ -48,5 +52,21 @@ public class Message implements Serializable {
 
     public void setCreated_at(Date created_at) {
         this.created_at = created_at;
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
+    }
+
+    public boolean is_groupe_message() {
+        return is_groupe_message;
+    }
+
+    public void setIs_groupe_message(boolean is_groupe_message) {
+        this.is_groupe_message = is_groupe_message;
     }
 }

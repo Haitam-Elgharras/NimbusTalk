@@ -1,5 +1,6 @@
 package com.chat.nimbustalk.Server.service;
 
+import com.chat.nimbustalk.Server.dao.entities.Group;
 import com.chat.nimbustalk.Server.dao.entities.Message;
 import com.chat.nimbustalk.Server.dao.entities.User;
 
@@ -10,4 +11,5 @@ public interface IMessageService {
     List<Message> getAllMessages();
     Message getMessageById(Integer id);
     List<Message> getAllMessages(User sender, User receiver);
+    List<Message> getAllMessages(Group group);
 }

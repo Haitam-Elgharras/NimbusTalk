@@ -70,6 +70,11 @@ public class ChatControllerImpl extends UnicastRemoteObject implements ChatContr
     }
 
     @Override
+    public List<Message> getAllMessages(Group group) throws RemoteException {
+        return this.serviceMessage.getAllMessages(group);
+    }
+
+    @Override
     public void addGroup(Group group) throws RemoteException {
         this.serviceGroup.addGroup(group);
     }

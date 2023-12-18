@@ -1,6 +1,7 @@
 package com.chat.nimbustalk.Server.service.Impl;
 
 import com.chat.nimbustalk.Server.dao.Impl.MessageDaoImpl;
+import com.chat.nimbustalk.Server.dao.entities.Group;
 import com.chat.nimbustalk.Server.dao.entities.Message;
 import com.chat.nimbustalk.Server.dao.entities.User;
 import com.chat.nimbustalk.Server.service.IMessageService;
@@ -26,5 +27,8 @@ public class IServiceMessageImpl implements IMessageService {
     public List<Message> getAllMessages(User sender, User receiver) {
         return this.messageDao.getAll(sender,receiver);
     }
+
+    @Override
+    public List<Message> getAllMessages(Group group) {return this.messageDao.getAll(group);}
 
 }

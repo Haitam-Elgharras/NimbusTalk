@@ -1,6 +1,7 @@
 package com.chat.nimbustalk.Client;
 
 import com.chat.nimbustalk.Client.connector.ServerConnector;
+import com.chat.nimbustalk.Server.dao.entities.Group;
 import com.chat.nimbustalk.Server.dao.entities.Message;
 import com.chat.nimbustalk.Server.dao.entities.User;
 import javafx.application.Platform;
@@ -96,6 +97,9 @@ public class HomeController extends Thread implements Initializable {
     private FileChooser fileChooser;
     private File filePath;
     public boolean toggleChat = false, toggleProfile = false;
+
+    //refers to the userBox selected by the user
+    private String userName;
 
 
     BufferedReader reader; // to read the messages from the server
@@ -335,7 +339,19 @@ public class HomeController extends Thread implements Initializable {
         } else {
             // Regular public message
             String fullMessage = Controller.user.getFullName() + ": " + message;
-            
+            try {
+                //Add message in DB
+                Message m = new Message();
+                m.setContent(message);
+                m.setSender(Controller.user);
+                m.setReceiver(null);
+                m.setGroup(ServerConnector.getControler().getGroupByName(userName));
+                m.setIs_groupe_message(true);
+                ServerConnector.getControler().addMessage(m);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
             writer.println(Controller.user.getUsername() + ":" + fullMessage);
             update(Controller.user.getUsername(), fullMessage); // Use the update method here
             msgField.setText("");
@@ -358,6 +374,8 @@ public class HomeController extends Thread implements Initializable {
         String finalRecipient = recipient.substring(1);
         User receiver = Controller.users.stream().filter(u -> u.getUsername().equals(finalRecipient)).findFirst().orElse(null);
         m.setReceiver(receiver);
+        m.setIs_groupe_message(false);
+        m.setGroup(null);
         try {
             ServerConnector.getControler().addMessage(m);
         }
@@ -395,7 +413,19 @@ public class HomeController extends Thread implements Initializable {
 
                 // Add the user box to the list view
                 listView.getItems().add(userBox);
-                
+            }
+
+            try {
+                for (Group group: ServerConnector.getControler().getGroupsByUser(Controller.user)) {
+                    HBox userBox = createUserBox(group);
+                    assert userBox != null;
+                    userBox.setLayoutY(layoutY);
+                    layoutY += 100; // Increment layoutY by 100 for the next user box
+                    // Add the user box to the list view
+                    listView.getItems().add(userBox);
+                }
+            } catch (Exception e){
+                e.printStackTrace();
             }
         });
 
@@ -422,6 +452,35 @@ public class HomeController extends Thread implements Initializable {
             // Call the non-static method on the instance
             userBoxController.setUsernameLabel(client.getFullName());
             userBoxController.getHiddenUsername().setText(client.getUsername());
+
+            // You can now return this HBox and use it as needed
+            return userBox;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private HBox createUserBox(Group group) {
+
+        File file = new File("src/main/java/com/chat/nimbustalk/Client/UserBox.fxml");
+        URL url;
+        try {
+            url = file.toURI().toURL();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+        FXMLLoader loader = new FXMLLoader(url);
+
+        try {
+            HBox userBox = loader.load();
+
+            // Access the controller of the loaded FXML
+            UserBoxController userBoxController = loader.getController();
+
+            // Call the non-static method on the instance
+            userBoxController.setUsernameLabel(group.getName());
+            userBoxController.getHiddenUsername().setText(group.getName());
 
             // You can now return this HBox and use it as needed
             return userBox;
@@ -466,7 +525,7 @@ public class HomeController extends Thread implements Initializable {
         HBox userBox = (HBox) listView.getSelectionModel().getSelectedItem();
         if (userBox == null) return;
         else {
-            String userName = ((Text) ((VBox) userBox.getChildren().get(1)).getChildren().get(0)).getText();
+            userName = ((Text) ((VBox) userBox.getChildren().get(1)).getChildren().get(0)).getText();
 
             User user = Controller.users.stream()
                     .filter(u -> u.getUsername().equals(userName))
@@ -476,6 +535,7 @@ public class HomeController extends Thread implements Initializable {
                 List<Message> messages = null;
                 try {
                     messages = ServerConnector.getControler().getAllMessages(Controller.user, user);
+                    System.out.println(messages.size());
                 } catch (RemoteException e) {
                     throw new RuntimeException(e);
                 }
@@ -498,6 +558,36 @@ public class HomeController extends Thread implements Initializable {
                                 System.out.println("update called");
                                 update(m.getSender().getUsername(), message);
                             });
+                }
+            }
+            else {
+                //User selection is a group
+                try {
+                    Group group = ServerConnector.getControler().getGroupByName(userName);
+                    ArrayList<Message> messages = (ArrayList<Message>) ServerConnector.getControler().getAllMessages(group);
+                    System.out.println(messages.size());
+
+                    msgRoom.getChildren().clear();
+
+                    // Check for null messages and created_at values
+                    if (messages != null) {
+                        messages.stream()
+                                .filter((m)->{
+                                    System.out.println("message" + m.getContent());
+                                    System.out.println("message" + m.getCreated_at());
+                                    return true;
+                                })
+                                .filter(m -> m.getCreated_at() != null)
+                                .sorted(Comparator.comparing(Message::getCreated_at))
+                                .forEach(m -> {
+                                    String message = m.getSender().getFullName() + ": " + m.getContent();
+                                    System.out.println(message);
+                                    System.out.println("update called");
+                                    update(m.getSender().getUsername(), message);
+                                });
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }

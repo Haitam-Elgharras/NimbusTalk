@@ -16,6 +16,7 @@ public interface ChatController extends Remote {
     List<Message> getAllMessages() throws RemoteException;
     Message getMessageById(Integer id) throws RemoteException;
     List<Message> getAllMessages(User sender, User receiver) throws RemoteException;
+    List<Message> getAllMessages(Group group) throws RemoteException;
 
     //User Functions
     void addUser(User u) throws RemoteException;

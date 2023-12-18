@@ -2,6 +2,7 @@ package com.chat.nimbustalk.Server.dao.Impl;
 
 import com.chat.nimbustalk.Server.dao.DBConnection;
 import com.chat.nimbustalk.Server.dao.MessageDao;
+import com.chat.nimbustalk.Server.dao.entities.Group;
 import com.chat.nimbustalk.Server.dao.entities.Message;
 import com.chat.nimbustalk.Server.dao.entities.User;
 
@@ -16,10 +17,18 @@ public class MessageDaoImpl implements MessageDao {
     public void save(Message o) {
         try {
             PreparedStatement pstm = DBConnection.getConnection().prepareStatement(
-                    "Insert into Message (content,senderUser,receiverUser) values (?,?,?)");
+                    "Insert into Message (content,senderUser,receiverUser,groupe,is_groupe_message) values (?,?,?,?,?)");
             pstm.setString(1,o.getContent());
             pstm.setInt(2,o.getSender().getId());
-            pstm.setInt(3,o.getReceiver().getId());
+            if (!o.is_groupe_message()) {
+                pstm.setInt(3,o.getReceiver().getId());
+                pstm.setObject(4,null);
+            }
+            else {
+                pstm.setObject(3,null);
+                pstm.setInt(4,o.getGroup().getId());
+            }
+            pstm.setBoolean(5,o.is_groupe_message());
             pstm.executeUpdate();
         } catch (Exception e){
             e.printStackTrace();
@@ -39,6 +48,9 @@ public class MessageDaoImpl implements MessageDao {
                 m.setContent(rs.getString(2));
                 m.setSender(new UserDaoImpl().getById(rs.getInt(3)));
                 m.setReceiver(new UserDaoImpl().getById(rs.getInt(4)));
+                m.setCreated_at(rs.getDate(5));
+                m.setGroup(new GroupDaoImpl().getById(6));
+                m.setIs_groupe_message(rs.getBoolean(7));
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -59,7 +71,8 @@ public class MessageDaoImpl implements MessageDao {
                 m.setSender(new UserDaoImpl().getById(rs.getInt(3)));
                 m.setReceiver(new UserDaoImpl().getById(rs.getInt(4)));
                 m.setCreated_at(rs.getDate(5));
-
+                m.setGroup(new GroupDaoImpl().getById(6));
+                m.setIs_groupe_message(rs.getBoolean(7));
                 messages.add(m);
             }
         } catch (Exception e){
@@ -73,11 +86,12 @@ public class MessageDaoImpl implements MessageDao {
         ArrayList<Message> messages = new ArrayList<>();
         try {
             PreparedStatement pstm = DBConnection.getConnection()
-                    .prepareStatement("Select * from Message where (senderUser = ? or receiverUser = ?) and (senderUser = ? or receiverUser = ?)");
+                    .prepareStatement("Select * from Message where (senderUser = ? or receiverUser = ?) and (senderUser = ? or receiverUser = ?) and is_groupe_message=?");
             pstm.setInt(1,sender.getId());
             pstm.setInt(2,sender.getId());
             pstm.setInt(3,receiver.getId());
             pstm.setInt(4,receiver.getId());
+            pstm.setBoolean(5, false);
             ResultSet rs = pstm.executeQuery();
             while(rs.next()){
                 Message m = new Message();
@@ -86,6 +100,34 @@ public class MessageDaoImpl implements MessageDao {
                 m.setSender(new UserDaoImpl().getById(rs.getInt(3)));
                 m.setReceiver(new UserDaoImpl().getById(rs.getInt(4)));
                 m.setCreated_at(rs.getDate(5));
+                m.setGroup(new GroupDaoImpl().getById(rs.getInt(6)));
+                m.setIs_groupe_message(rs.getBoolean(7));
+                messages.add(m);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return messages;
+    }
+
+    @Override
+    public List<Message> getAll(Group group) {
+        ArrayList<Message> messages = new ArrayList<>();
+        try {
+            PreparedStatement pstm = DBConnection.getConnection()
+                    .prepareStatement("Select * from Message where groupe = ? and is_groupe_message=?");
+            pstm.setInt(1,group.getId());
+            pstm.setBoolean(2, true);
+            ResultSet rs = pstm.executeQuery();
+            while(rs.next()){
+                Message m = new Message();
+                m.setId(rs.getInt(1));
+                m.setContent(rs.getString(2));
+                m.setSender(new UserDaoImpl().getById(rs.getInt(3)));
+                m.setReceiver(new UserDaoImpl().getById(rs.getInt(4)));
+                m.setCreated_at(rs.getDate(5));
+                m.setGroup(new GroupDaoImpl().getById(rs.getInt(6)));
+                m.setIs_groupe_message(rs.getBoolean(7));
                 messages.add(m);
             }
         } catch (Exception e){
