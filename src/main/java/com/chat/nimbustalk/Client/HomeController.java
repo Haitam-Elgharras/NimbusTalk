@@ -54,6 +54,8 @@ public class HomeController extends Thread implements Initializable {
     @FXML
     public VBox msgRoom;// where the messages are displayed
     @FXML
+    public Label usernameLabel;
+    @FXML
     public Label online;
     @FXML
     public Label fullName;
@@ -92,11 +94,12 @@ public class HomeController extends Thread implements Initializable {
     @FXML
     private VBox clientListBox;
 
-    @FXML
-    private Button testUI;
     private FileChooser fileChooser;
     private File filePath;
     public boolean toggleChat = false, toggleProfile = false;
+
+    private boolean privateChatMode = false;
+    private User privateChatUser = null;
 
     //refers to the userBox selected by the user
     private String userName;
@@ -228,12 +231,11 @@ public class HomeController extends Thread implements Initializable {
         boolean isPrivate = Controller.user.getUsername().equalsIgnoreCase(username) && tokens.length > 1 && tokens[1].startsWith("@");
 
         if (isPrivate) {
-            tokens[0] = "You to " + tokens[0] + " :";
+            tokens[0] = privateChatMode ? "You :" : "You to " + tokens[0] + " :";
             tokens[1] ="";
             message = String.join(" ", tokens);
         }
-        else
-        if (Controller.user.getUsername().equalsIgnoreCase(username)) {
+        else if (Controller.user.getUsername().equalsIgnoreCase(username)) {
             tokens[0] = "You :";
             message = String.join(" ", tokens);
         }
@@ -243,9 +245,8 @@ public class HomeController extends Thread implements Initializable {
         }
 
         if(username.contains("(private")){
-            fullname = username;
+            fullname = privateChatMode? username: username.replace("(private)", "");
         }
-
         Text text = new Text(message);
 
         text.setFill(Color.WHITE);
@@ -277,8 +278,6 @@ public class HomeController extends Thread implements Initializable {
         img.getStyleClass().add("imageView");
 
         if (!Controller.user.getUsername().equalsIgnoreCase(username)) {
-            
-            
             tempFlow.getStyleClass().add("tempFlowFlipped");
             flow.getStyleClass().add("textFlowFlipped");
             msgRoom.setAlignment(Pos.TOP_LEFT);
@@ -315,48 +314,56 @@ public class HomeController extends Thread implements Initializable {
         String recipient = null;
         String message = msgField.getText().trim();
 
-        if (message.startsWith("@")) {
-            
-            int spaceIndex = message.indexOf(" ");
-            if (spaceIndex != -1) {
-                recipient = message.substring(0, spaceIndex);
-                System.out.println("recipient: from send method" + recipient);
-                
-                message = message.substring(spaceIndex + 1);
-            }
+        if (privateChatMode) {
+            sendPrivateMessage("@" + privateChatUser.getUsername(), Controller.user.getFullName(), message);
         }
+        else {
+            if (message.startsWith("@")) {
 
-        if (recipient != null && !recipient.isEmpty()) {
-            {
-                // retieve the full name of the recipient
-                String finalRecipient = recipient;
-                String fullname = Objects.requireNonNull(Controller.users.stream()
-                        .filter(u -> u.getUsername().equals(finalRecipient.substring(1)))
-                        .findFirst().orElse(null)).getFullName();
-                
-                sendPrivateMessage(recipient, fullname, message);
+                int spaceIndex = message.indexOf(" ");
+                if (spaceIndex != -1) {
+                    recipient = message.substring(0, spaceIndex);
+                    System.out.println("recipient: from send method" + recipient);
+
+                    message = message.substring(spaceIndex + 1);
+                }
             }
-        } else {
-            // Regular public message
-            String fullMessage = Controller.user.getFullName() + ": " + message;
-            try {
-                //Add message in DB
-                Message m = new Message();
-                m.setContent(message);
-                m.setSender(Controller.user);
-                m.setReceiver(null);
-                m.setGroup(ServerConnector.getControler().getGroupByName(userName));
-                m.setIs_groupe_message(true);
-                ServerConnector.getControler().addMessage(m);
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
-            writer.println(Controller.user.getUsername() + ":" + fullMessage);
-            update(Controller.user.getUsername(), fullMessage); // Use the update method here
-            msgField.setText("");
-            if (message.equalsIgnoreCase("BYE") || message.equalsIgnoreCase("logout")) {
-                System.exit(0);
+
+            if (recipient != null && !recipient.isEmpty()) {
+                {
+                    // retieve the full name of the recipient
+                    String finalRecipient = recipient;
+                    String fullname = Objects.requireNonNull(Controller.users.stream()
+                            .filter(u -> u.getUsername().equals(finalRecipient.substring(1)))
+                            .findFirst().orElse(null)).getFullName();
+
+                    System.out.println("verify the recipient: " + recipient);
+                    sendPrivateMessage(recipient, fullname, message);
+                }
+            } else {
+                // Regular public message
+                String fullMessage = Controller.user.getFullName() + ": " + message;
+
+                try {
+                    //Add message in DB
+                    Message m = new Message();
+                    m.setContent(message);
+                    m.setSender(Controller.user);
+                    m.setReceiver(null);
+                    m.setGroup(ServerConnector.getControler().getGroupByName(userName));
+                    m.setIs_groupe_message(true);
+                    ServerConnector.getControler().addMessage(m);
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+
+                writer.println(Controller.user.getUsername() + ":" + fullMessage);
+                update(Controller.user.getUsername(), fullMessage); // Use the update method here
+                msgField.setText("");
+                if (message.equalsIgnoreCase("BYE") || message.equalsIgnoreCase("logout")) {
+                    System.exit(0);
+                }
             }
         }
     }
@@ -366,7 +373,7 @@ public class HomeController extends Thread implements Initializable {
         
         update(Controller.user.getUsername(), fullMessage); // Use the update method here
         // send message to the server
-        writer.println(fullMessage);
+        writer.println(Controller.user.getUsername() + ":"+Controller.user.getFullName()+": "+message);
         //Add message in DB
         Message m = new Message();
         m.setContent(message);
@@ -532,6 +539,11 @@ public class HomeController extends Thread implements Initializable {
                     .findFirst().orElse(null);
 
             if (user != null) {
+                {
+                    usernameLabel.setText(user.getFullName());
+                    privateChatMode = true;
+                    privateChatUser = user;
+                }
                 List<Message> messages = null;
                 try {
                     messages = ServerConnector.getControler().getAllMessages(Controller.user, user);
