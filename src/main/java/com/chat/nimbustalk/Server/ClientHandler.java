@@ -42,7 +42,7 @@ public class ClientHandler extends Thread {
                 // Split the message into tokens
                 String[] tokens = msg.split(":");
                 String recipientFullname = tokens[0];
-                System.out.println("sender: " + recipientFullname);
+                System.out.println("recipient fullname: " + recipientFullname);
                 String recipient = null;
                 String actualMessage = null;
 

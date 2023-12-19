@@ -155,6 +155,7 @@ public class HomeController extends Thread implements Initializable {
             while (true) {
                 // 1. Read a line of text from the server(clientHandler)
                 String msg = reader.readLine();
+                System.out.println("msg: " + msg);
 
                 if(msg.equalsIgnoreCase("updateListOfUsers")) {
                     
@@ -179,6 +180,7 @@ public class HomeController extends Thread implements Initializable {
                 // 3. Extract the full message (excluding the command)
                 StringBuilder fullMsg = new StringBuilder();
                 String tokenToAppend = tokens.length > 2 ? tokens[1]+":"+tokens[2] : tokens[1];
+                System.out.println("tokenToAppend: " + tokenToAppend);
                 fullMsg.append(tokenToAppend);
 
                 // 4. Print the command and the full message
@@ -198,7 +200,7 @@ public class HomeController extends Thread implements Initializable {
                 // 7. Call the update method to update the UI
                 Platform.runLater(() -> {
                     try {
-                        
+                        System.out.println("cmd ? : " + cmd);
                         update(cmd, fullMsg.toString().trim());
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -220,6 +222,7 @@ public class HomeController extends Thread implements Initializable {
     }
 
     public boolean update(String username, String message) {
+
         String fullname = "";
         String[] tokens = message.split(":");
         fullname = tokens[0];
@@ -241,9 +244,8 @@ public class HomeController extends Thread implements Initializable {
         }
 
         if(username.contains("(private")){
-            fullname = username;
+            fullname = privateChatMode? username: username.replace("(private)", "");
         }
-
         Text text = new Text(message);
 
         text.setFill(Color.WHITE);
@@ -251,6 +253,7 @@ public class HomeController extends Thread implements Initializable {
         TextFlow tempFlow = new TextFlow();
 
         if (!Controller.user.getUsername().equalsIgnoreCase(username)) {
+            System.out.println("fullname: " + fullname);
             Text txtName = new Text(fullname + "\n");
             txtName.getStyleClass().add("txtName");
             tempFlow.getChildren().add(txtName);
@@ -311,8 +314,9 @@ public class HomeController extends Thread implements Initializable {
         String recipient = null;
         String message = msgField.getText().trim();
 
-        if (privateChatMode)
-            sendPrivateMessage("@" + privateChatUser.getUsername(), privateChatUser.getFullName(), message);
+        if (privateChatMode) {
+            sendPrivateMessage("@" + privateChatUser.getUsername(), Controller.user.getFullName(), message);
+        }
         else {
             if (message.startsWith("@")) {
 
@@ -333,6 +337,7 @@ public class HomeController extends Thread implements Initializable {
                             .filter(u -> u.getUsername().equals(finalRecipient.substring(1)))
                             .findFirst().orElse(null)).getFullName();
 
+                    System.out.println("verify the recipient: " + recipient);
                     sendPrivateMessage(recipient, fullname, message);
                 }
             } else {
@@ -354,7 +359,7 @@ public class HomeController extends Thread implements Initializable {
         
         update(Controller.user.getUsername(), fullMessage); // Use the update method here
         // send message to the server
-        writer.println(fullMessage);
+        writer.println(Controller.user.getUsername() + ":"+Controller.user.getFullName()+": "+message);
         //Add message in DB
         Message m = new Message();
         m.setContent(message);
