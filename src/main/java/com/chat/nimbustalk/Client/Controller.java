@@ -91,6 +91,7 @@ public class Controller {
                     } else {
                         u.setGender("F");
                     }
+                    System.out.println("username: " + u.getUsername() + " fullname" + u.getFullName() +" pass: " + u.getPassword());
                     //Added user in DB
                     ServerConnector.getControler().addUser(u);
                     goBack.setOpacity(1);
@@ -123,16 +124,18 @@ public class Controller {
         users = (ArrayList<User>) ServerConnector.getControler().getAllUsers();
         String username = userName.getText();
         String password = passWord.getText();
+        System.out.println(username + " " + password);
         if(username.equalsIgnoreCase("") || password.equalsIgnoreCase("")) {
-            
-            
+            System.out.println("Login Failed");
             loginNotifier.setOpacity(1);
             return;
         }
         boolean login = false;
         for (User x : users) {
+            System.out.println("correct " + x.getUsername() + " " + x.getPassword());
             
             if (x.getUsername().equalsIgnoreCase(username) && x.getPassword().equals(password)) {
+                System.out.println("Login Successful");
                 login = true;
                 //Created User
                 user = x;
