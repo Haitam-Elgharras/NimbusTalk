@@ -500,7 +500,7 @@ public class HomeController extends Thread implements Initializable {
     private void openGroupFXML() {
         try {
             // Load the FXML file
-            File file = new File("src/main/java/com/chat/nimbustalk/Client/Group.fxml");
+            File file = new File("src/main/java/com/chat/nimbustalk/Client/Group2.fxml");
             URL url = file.toURI().toURL();
             Parent root = FXMLLoader.load(url);
 
@@ -509,9 +509,13 @@ public class HomeController extends Thread implements Initializable {
 
             // Create a new stage
             Stage stage = new Stage();
-            stage.setTitle("Another FXML");
+            stage.setTitle("Group Creation");
             stage.setScene(scene);
 
+            // After Group creation
+            stage.setOnCloseRequest(event -> {
+                updateUsersList(Controller.users);
+            });
             // Show the stage
             stage.show();
         } catch (Exception e) {

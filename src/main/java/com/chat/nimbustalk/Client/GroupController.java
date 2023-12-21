@@ -35,6 +35,7 @@ public class GroupController implements Initializable {
                 }
             }
             userList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+            groupeName.requestFocus();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -43,28 +44,56 @@ public class GroupController implements Initializable {
     @FXML
     private void buttonHandler(){
         try {
-            //Add Group to DB
-            Group g = new Group();
-            g.setName(groupeName.getText());
-            ServerConnector.getControler().addGroup(g);
-
-            //Add Group creator to UserGroup
-            Group group = ServerConnector.getControler().getGroupByName(groupeName.getText());
-            UserGroup userGroupe = new UserGroup();
-            userGroupe.setUser(Controller.user);
-            userGroupe.setGroup(group);
-            ServerConnector.getControler().addUserToGroup(userGroupe);
-
-            //Add Selected users in UserGroup
-            ObservableList<Label> selectedUsers = userList.getSelectionModel().getSelectedItems();
-            for (Label l:selectedUsers) {
-                User u = ServerConnector.getControler().getUserByUsername(l.getText());
-                UserGroup userGroup = new UserGroup();
-                userGroup.setUser(u);
-                userGroup.setGroup(group);
-                ServerConnector.getControler().addUserToGroup(userGroup);
+            //Form Validation
+            if (groupeName.getText().trim().equalsIgnoreCase("")){
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Group Creation");
+                alert.setHeaderText("Invalid Form");
+                alert.setContentText("Enter a group name");
+                alert.show();
             }
+            else if (ServerConnector.getControler().getGroupByName(groupeName.getText()).getId() != 0){
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Group Creation");
+                alert.setHeaderText("Invalid Form");
+                alert.setContentText("Group name already used" + ServerConnector.getControler().getGroupByName(groupeName.getText()).getId());
+                alert.show();
+            }
+            else if (userList.getSelectionModel().getSelectedItems().isEmpty()){
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Group Creation");
+                alert.setHeaderText("Invalid Form");
+                alert.setContentText("Select at least one group member");
+                alert.show();
+            }
+            else {
+                //Add Group to DB
+                Group g = new Group();
+                g.setName(groupeName.getText());
+                ServerConnector.getControler().addGroup(g);
 
+                //Add Group creator to UserGroup
+                Group group = ServerConnector.getControler().getGroupByName(groupeName.getText());
+                UserGroup userGroupe = new UserGroup();
+                userGroupe.setUser(Controller.user);
+                userGroupe.setGroup(group);
+                ServerConnector.getControler().addUserToGroup(userGroupe);
+
+                //Add Selected users in UserGroup
+                ObservableList<Label> selectedUsers = userList.getSelectionModel().getSelectedItems();
+                for (Label l:selectedUsers) {
+                    User u = ServerConnector.getControler().getUserByUsername(l.getText());
+                    UserGroup userGroup = new UserGroup();
+                    userGroup.setUser(u);
+                    userGroup.setGroup(group);
+                    ServerConnector.getControler().addUserToGroup(userGroup);
+                }
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Group Creation");
+                alert.setHeaderText(groupeName.getText() + " is created successfully");
+                alert.show();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
