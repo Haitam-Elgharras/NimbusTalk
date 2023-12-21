@@ -16,16 +16,16 @@ public class MessageDaoImpl implements MessageDao {
     public void save(Message o) {
         try {
             PreparedStatement pstm = DBConnection.getConnection().prepareStatement(
-                    "Insert into Message (content,senderUser,receiverUser) values (?,?,?)");
-            pstm.setString(1,o.getContent());
-            pstm.setInt(2,o.getSender().getId());
-            pstm.setInt(3,o.getReceiver().getId());
+                    "Insert into Message (content, senderUser, receiverUser, created_at) values (?, ?, ?, ?)");
+            pstm.setString(1, o.getContent());
+            pstm.setInt(2, o.getSender().getId());
+            pstm.setInt(3, o.getReceiver().getId());
+            pstm.setTimestamp(4, new java.sql.Timestamp(new java.util.Date().getTime()));
             pstm.executeUpdate();
         } catch (Exception e){
             e.printStackTrace();
         }
     }
-
     @Override
     public Message getById(Integer id) {
         Message m = new Message();
@@ -35,10 +35,11 @@ public class MessageDaoImpl implements MessageDao {
             pstm.setInt(1,id);
             ResultSet rs = pstm.executeQuery();
             while(rs.next()){
-                m.setId(rs.getInt(1));
-                m.setContent(rs.getString(2));
-                m.setSender(new UserDaoImpl().getById(rs.getInt(3)));
-                m.setReceiver(new UserDaoImpl().getById(rs.getInt(4)));
+                m.setId(rs.getInt("id"));
+                m.setContent(rs.getString("content"));
+                m.setSender(new UserDaoImpl().getById(rs.getInt("senderUser")));
+                m.setReceiver(new UserDaoImpl().getById(rs.getInt("receiverUser")));
+                m.setCreated_at(rs.getDate("created_at"));
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -54,11 +55,11 @@ public class MessageDaoImpl implements MessageDao {
             ResultSet rs = stm.executeQuery("Select * from Message");
             while(rs.next()){
                 Message m = new Message();
-                m.setId(rs.getInt(1));
-                m.setContent(rs.getString(2));
-                m.setSender(new UserDaoImpl().getById(rs.getInt(3)));
-                m.setReceiver(new UserDaoImpl().getById(rs.getInt(4)));
-                m.setCreated_at(rs.getDate(5));
+                m.setId(rs.getInt("id"));
+                m.setContent(rs.getString("content"));
+                m.setSender(new UserDaoImpl().getById(rs.getInt("senderUser")));
+                m.setReceiver(new UserDaoImpl().getById(rs.getInt("receiverUser")));
+                m.setCreated_at(rs.getDate("created_at"));
 
                 messages.add(m);
             }
@@ -81,11 +82,11 @@ public class MessageDaoImpl implements MessageDao {
             ResultSet rs = pstm.executeQuery();
             while(rs.next()){
                 Message m = new Message();
-                m.setId(rs.getInt(1));
-                m.setContent(rs.getString(2));
-                m.setSender(new UserDaoImpl().getById(rs.getInt(3)));
-                m.setReceiver(new UserDaoImpl().getById(rs.getInt(4)));
-                m.setCreated_at(rs.getDate(5));
+                m.setId(rs.getInt("id"));
+                m.setContent(rs.getString("content"));
+                m.setSender(new UserDaoImpl().getById(rs.getInt("senderUser")));
+                m.setReceiver(new UserDaoImpl().getById(rs.getInt("receiverUser")));
+                m.setCreated_at(rs.getDate("created_at"));
                 messages.add(m);
             }
         } catch (Exception e){

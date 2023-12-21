@@ -227,6 +227,8 @@ public class HomeController extends Thread implements Initializable {
         String[] tokens = message.split(":");
         fullname = tokens[0];
 
+        System.out.println("from update method: " + username + " " + message);
+
         boolean isPrivate = Controller.user.getUsername().equalsIgnoreCase(username) && tokens.length > 1 && tokens[1].startsWith("@");
 
         if (isPrivate) {
@@ -244,7 +246,19 @@ public class HomeController extends Thread implements Initializable {
         }
 
         if(username.contains("(private")){
-            fullname = privateChatMode? username: username.replace("(private)", "");
+            System.out.println("contains private :" + username);
+            String tmp = username.replace("(private)", "").trim();
+            try {
+                fullname = Controller.users.stream().filter(u -> u.getUsername().equals(tmp)).findFirst().orElse(null).getFullName();
+            }
+            catch (Exception e){
+                fullname = tmp;
+                e.printStackTrace();
+            }
+            if(!privateChatMode)
+                fullname = fullname + " (private)";
+
+
         }
         Text text = new Text(message);
 
@@ -358,8 +372,13 @@ public class HomeController extends Thread implements Initializable {
         String fullMessage = fullname + ":" + recipient + ":" + message;
         
         update(Controller.user.getUsername(), fullMessage); // Use the update method here
+        System.out.println("whats sended to the sender: " + Controller.user.getUsername() + ":" + fullMessage);
+
         // send message to the server
-        writer.println(Controller.user.getUsername() + ":"+Controller.user.getFullName()+": "+message);
+        writer.println(Controller.user.getUsername() + ":"+recipient+": "+message);
+//        writer.println(Controller.user.getUsername() + ":"+Controller.user.getFullName()+": "+message);
+
+        System.out.println("whats sends to the server: " + Controller.user.getUsername() + ":"+recipient+": "+message);
         //Add message in DB
         Message m = new Message();
         m.setContent(message);
