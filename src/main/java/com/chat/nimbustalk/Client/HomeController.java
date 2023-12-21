@@ -314,10 +314,6 @@ public class HomeController extends Thread implements Initializable {
         String recipient = null;
         String message = msgField.getText().trim();
 
-        if (privateChatMode) {
-            sendPrivateMessage("@" + privateChatUser.getUsername(), Controller.user.getFullName(), message);
-        }
-        else {
             if (message.startsWith("@")) {
 
                 int spaceIndex = message.indexOf(" ");
@@ -365,7 +361,6 @@ public class HomeController extends Thread implements Initializable {
                     System.exit(0);
                 }
             }
-        }
     }
 
     public void sendPrivateMessage(String recipient, String fullname, String message) {
@@ -507,7 +502,7 @@ public class HomeController extends Thread implements Initializable {
     private void openGroupFXML() {
         try {
             // Load the FXML file
-            File file = new File("src/main/java/com/chat/nimbustalk/Client/Group2.fxml");
+            File file = new File("src/main/java/com/chat/nimbustalk/Client/Group.fxml");
             URL url = file.toURI().toURL();
             Parent root = FXMLLoader.load(url);
 
