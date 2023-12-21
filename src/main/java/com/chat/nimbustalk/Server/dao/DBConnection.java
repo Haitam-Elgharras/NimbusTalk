@@ -10,7 +10,7 @@ public class DBConnection {
     private DBConnection(){
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            this.con = DriverManager.getConnection("jdbc:mysql://localhost:3306/NimbusTalk","root","ilyas-2002");
+            this.con = DriverManager.getConnection("jdbc:mysql://localhost:3306/NimbusTalk","root","12345612");
         }
         catch (Exception e) {
             e.printStackTrace();

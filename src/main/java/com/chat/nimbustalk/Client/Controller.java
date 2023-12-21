@@ -131,13 +131,14 @@ public class Controller {
         }
         boolean login = false;
         for (User x : users) {
-            
+            System.out.println(x.getUsername() + " " + x.getPassword());
+
             if (x.getUsername().equalsIgnoreCase(username) && x.getPassword().equals(password)) {
                 login = true;
                 //Created User
                 user = x;
                 loggedInUser.add(x);
-                
+
                 break;
             }
         }
