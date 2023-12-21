@@ -41,7 +41,8 @@ public class ClientHandler extends Thread {
 
                 // Split the message into tokens
                 String[] tokens = msg.split(":");
-                String sender = tokens[0];
+                String recipientFullname = tokens[0];
+                System.out.println("recipient fullname: " + recipientFullname);
                 String recipient = null;
                 String actualMessage = null;
 
@@ -50,12 +51,12 @@ public class ClientHandler extends Thread {
                     recipient = tokens[1].substring(1);
                     
                     
-                    actualMessage = msg.substring(sender.length() + recipient.length() + 3); //for : : and @
+                    actualMessage = msg.substring(recipientFullname.length() + recipient.length() + 3); //for : : and @
                     
                 } else {
                     // Regular public message
                     // useless code !!!
-                    actualMessage = msg.substring(sender.length() + 1);
+                    actualMessage = msg.substring(recipientFullname.length() + 1);
                 }
 
                 // Handle the message based on whether it's private or public
@@ -64,7 +65,7 @@ public class ClientHandler extends Thread {
                     // It's a private message, find the appropriate client and send the message
                     for (ClientHandler cl : clients) {
                         if (cl.username.equals(recipient)) {
-                            cl.writer.println(sender + " (private): " + actualMessage);
+                            cl.writer.println(recipientFullname + " (private): " + actualMessage);
                             
                             break;
                         }
