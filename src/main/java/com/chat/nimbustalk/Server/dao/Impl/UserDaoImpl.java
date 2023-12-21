@@ -36,17 +36,17 @@ public class UserDaoImpl implements UserDao {
         User c = new User();
         try {
             PreparedStatement pstm = DBConnection.getConnection()
-                    .prepareStatement("Select id, fullName, email, password, gender, phoneNumber, username from User where id = ?");
+                    .prepareStatement("Select * from User where id = ?");
             pstm.setInt(1,id);
             ResultSet rs = pstm.executeQuery();
             while(rs.next()){
-                c.setId(rs.getInt("id"));
-                c.setFullName(rs.getString("fullName"));
-                c.setEmail(rs.getString("email"));
-                c.setPassword(rs.getString("password"));
-                c.setGender(rs.getString("gender"));
-                c.setPhoneNumber(rs.getString("phoneNumber"));
-                c.setUsername(rs.getString("username"));
+                c.setId(rs.getInt(1));
+                c.setFullName(rs.getString(2));
+                c.setEmail(rs.getString(3));
+                c.setPassword(rs.getString(4));
+                c.setGender(rs.getString(5));
+                c.setPhoneNumber(rs.getString(6));
+                c.setUsername(rs.getString(7));
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -59,16 +59,16 @@ public class UserDaoImpl implements UserDao {
         ArrayList<User> clients = new ArrayList<>();
         try {
             Statement stm = DBConnection.getConnection().createStatement();
-            ResultSet rs = stm.executeQuery("Select id, fullName, email, password, gender, phoneNumber, username from User");
+            ResultSet rs = stm.executeQuery("Select * from User");
             while(rs.next()){
                 User c= new User();
-                c.setId(rs.getInt("id"));
-                c.setFullName(rs.getString("fullName"));
-                c.setEmail(rs.getString("email"));
-                c.setPassword(rs.getString("password"));
-                c.setGender(rs.getString("gender"));
-                c.setPhoneNumber(rs.getString("phoneNumber"));
-                c.setUsername(rs.getString("username"));
+                c.setId(rs.getInt(1));
+                c.setFullName(rs.getString(2));
+                c.setEmail(rs.getString(3));
+                c.setPassword(rs.getString(4));
+                c.setGender(rs.getString(5));
+                c.setPhoneNumber(rs.getString(6));
+                c.setUsername(rs.getString(7));
                 clients.add(c);
             }
         } catch (Exception e){
@@ -81,19 +81,16 @@ public class UserDaoImpl implements UserDao {
     public User getUserByUsername(String username) {
         User c = new User();
         try {
-            PreparedStatement pstm = DBConnection.getConnection().prepareStatement(
-                    "Select id, fullName, email, password, gender, phoneNumber, username from User where username = ?"
-            );
+            PreparedStatement pstm = DBConnection.getConnection().prepareStatement("Select * from User where fullName = ?");
             pstm.setString(1,username);
             ResultSet rs = pstm.executeQuery();
             while(rs.next()){
-                c.setId(rs.getInt("id"));
-                c.setFullName(rs.getString("fullName"));
-                c.setEmail(rs.getString("email"));
-                c.setPassword(rs.getString("password"));
-                c.setGender(rs.getString("gender"));
-                c.setPhoneNumber(rs.getString("phoneNumber"));
-                c.setUsername(rs.getString("username"));
+                c.setId(rs.getInt(1));
+                c.setFullName(rs.getString(2));
+                c.setEmail(rs.getString(3));
+                c.setPassword(rs.getString(4));
+                c.setGender(rs.getString(5));
+                c.setPhoneNumber(rs.getString(6));
             }
         } catch (Exception e){
             e.printStackTrace();

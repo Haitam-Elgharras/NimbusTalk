@@ -15,8 +15,7 @@ public class GroupDaoImpl implements GroupDao {
     @Override
     public void save(Group group) {
         try {
-            PreparedStatement pstm = DBConnection.getConnection()
-                    .prepareStatement("Insert into groupe (name) values (?)");
+            PreparedStatement pstm = DBConnection.getConnection().prepareStatement("Insert into groupe (name) values (?)");
             pstm.setString(1,group.getName());
             pstm.executeUpdate();
         } catch (Exception e){
@@ -28,13 +27,12 @@ public class GroupDaoImpl implements GroupDao {
     public Group getById(Integer id) {
         Group group = new Group();
         try {
-            PreparedStatement pstm = DBConnection.getConnection()
-                    .prepareStatement("Select * from groupe where id = ?");
+            PreparedStatement pstm = DBConnection.getConnection().prepareStatement("Select * from groupe where id = ?");
             pstm.setInt(1,id);
             ResultSet rs = pstm.executeQuery();
             while(rs.next()){
-                group.setId(rs.getInt("id"));
-                group.setName(rs.getString("name"));
+                group.setId(rs.getInt(1));
+                group.setName(rs.getString(2));
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -50,8 +48,8 @@ public class GroupDaoImpl implements GroupDao {
             ResultSet rs = stm.executeQuery("Select * from groupe");
             while(rs.next()){
                 Group group= new Group();
-                group.setId(rs.getInt("id"));
-                group.setName(rs.getString("name"));
+                group.setId(rs.getInt(1));
+                group.setName(rs.getString(2));
                 groups.add(group);
             }
         } catch (Exception e){
@@ -68,8 +66,8 @@ public class GroupDaoImpl implements GroupDao {
             pstm.setString(1,name);
             ResultSet rs = pstm.executeQuery();
             while(rs.next()){
-                group.setId(rs.getInt("id"));
-                group.setName(rs.getString("name"));
+                group.setId(rs.getInt(1));
+                group.setName(rs.getString(2));
             }
         } catch (Exception e){
             e.printStackTrace();

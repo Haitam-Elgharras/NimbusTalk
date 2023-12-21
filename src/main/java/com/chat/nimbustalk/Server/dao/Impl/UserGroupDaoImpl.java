@@ -15,23 +15,12 @@ public class UserGroupDaoImpl implements UserGroupDao {
     @Override
     public void save(UserGroup o) {
         try {
-            // Check if the user exists
-            PreparedStatement checkUserStmt = DBConnection.getConnection()
-                    .prepareStatement("SELECT COUNT(*) FROM User WHERE id = ?");
-            checkUserStmt.setInt(1, o.getUser().getId());
-            ResultSet rs = checkUserStmt.executeQuery();
-            if (rs.next() && rs.getInt(1) > 0) {
-                // The user exists, insert the row into the user_groups table
-                PreparedStatement pstm = DBConnection.getConnection()
-                        .prepareStatement("INSERT INTO user_groups (user_id, group_id) VALUES (?, ?)");
-                pstm.setInt(1, o.getUser().getId());
-                pstm.setInt(2, o.getGroup().getId());
-                pstm.executeUpdate();
-            } else {
-                // The user does not exist, handle the error appropriately
-                System.out.println("Error: User with ID " + o.getUser().getId() + " does not exist.");
-            }
-        } catch (Exception e) {
+            PreparedStatement pstm = DBConnection.getConnection()
+                    .prepareStatement("Insert into user_groups (user_id, group_id) values (?,?)");
+            pstm.setInt(1,o.getUser().getId());
+            pstm.setInt(2,o.getGroup().getId());
+            pstm.executeUpdate();
+        } catch (Exception e){
             e.printStackTrace();
         }
     }
@@ -55,7 +44,7 @@ public class UserGroupDaoImpl implements UserGroupDao {
             pstm.setInt(1,user.getId());
             ResultSet rs = pstm.executeQuery();
             while(rs.next()){
-                groups.add(groupDao.getById(rs.getInt("group_id")));
+                groups.add(groupDao.getById(rs.getInt(2)));
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -72,7 +61,7 @@ public class UserGroupDaoImpl implements UserGroupDao {
             pstm.setInt(1,group.getId());
             ResultSet rs = pstm.executeQuery();
             while(rs.next()){
-                users.add(userDao.getById(rs.getInt("user_id")));
+                users.add(userDao.getById(rs.getInt(1)));
             }
         } catch (Exception e){
             e.printStackTrace();
