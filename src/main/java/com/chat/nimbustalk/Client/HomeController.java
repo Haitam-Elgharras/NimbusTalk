@@ -231,6 +231,7 @@ public class HomeController extends Thread implements Initializable {
 
         boolean isPrivate = Controller.user.getUsername().equalsIgnoreCase(username) && tokens.length > 1 && tokens[1].startsWith("@");
 
+
         if (isPrivate) {
             tokens[0] = privateChatMode ? "You :" : "You to " + tokens[0] + " :";
             tokens[1] ="";
@@ -267,6 +268,15 @@ public class HomeController extends Thread implements Initializable {
         TextFlow tempFlow = new TextFlow();
 
         if (!Controller.user.getUsername().equalsIgnoreCase(username)) {
+
+            // to not receive messages from other users while in private chat mode
+            if(!isPrivate && privateChatMode ){
+                System.out.println("From last if");
+                assert privateChatUser != null;
+                if(!privateChatUser.getUsername().equalsIgnoreCase(username)){
+                    return false;
+                }
+            }
             System.out.println("fullname: " + fullname);
             Text txtName = new Text(fullname + "\n");
             txtName.getStyleClass().add("txtName");
@@ -290,8 +300,6 @@ public class HomeController extends Thread implements Initializable {
         img.getStyleClass().add("imageView");
 
         if (!Controller.user.getUsername().equalsIgnoreCase(username)) {
-
-
             tempFlow.getStyleClass().add("tempFlowFlipped");
             flow.getStyleClass().add("textFlowFlipped");
             msgRoom.setAlignment(Pos.TOP_LEFT);
@@ -310,7 +318,6 @@ public class HomeController extends Thread implements Initializable {
 
         hbox.getStyleClass().add("hbox");
         Platform.runLater(() -> msgRoom.getChildren().addAll(hbox)); // Use msgRoom instead of chatBox
-
         return true;
     }
 
