@@ -5,6 +5,7 @@ import com.chat.nimbustalk.Server.dao.entities.Message;
 import com.chat.nimbustalk.Server.dao.entities.User;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,6 +21,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -48,6 +50,12 @@ public class HomeController extends Thread implements Initializable {
     public Button chatBtn;
     @FXML
     public Pane chat;
+
+    @FXML
+    public BorderPane chatScene;
+    @FXML
+    public BorderPane profileScene;
+
     @FXML
     public TextField msgField; // where the user types the message
     @FXML
@@ -64,6 +72,8 @@ public class HomeController extends Thread implements Initializable {
     public Label phoneNo;
     @FXML
     public Label gender;
+    @FXML
+    public Label username;
     @FXML
     public Pane profile;
     @FXML
@@ -84,6 +94,10 @@ public class HomeController extends Thread implements Initializable {
     public HBox searchBox;
     @FXML
     public ImageView btnEmoji;
+    @FXML
+    public ImageView profileIconHome;
+    @FXML
+    public ImageView profileIcon;
     @FXML
     private TextFlow emojiList;
     @FXML
@@ -108,6 +122,11 @@ public class HomeController extends Thread implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        chatScene.setOpacity(1);
+        chatScene.toFront();
+        profileScene.setOpacity(0);
+        profileScene.toBack();
+
         for(Node text : emojiList.getChildren()){
             text.setOnMouseClicked(event -> {
                 msgField.setText(msgField.getText()+" "+((Text)text).getText());
@@ -543,6 +562,49 @@ public class HomeController extends Thread implements Initializable {
         }
     }
 
+
+    public void handleProfileClick(MouseEvent event) {
+        if(event.getSource().equals(profileIconHome)){
+            System.out.println("profileIconHome");
+            chatScene.setOpacity(0);
+            chatScene.toBack();
+            profileScene.setOpacity(1);
+            profileScene.toFront();
+            setProfile();
+        }
+        else if(event.getSource().equals(profileIcon)){
+            System.out.println("profileIcon");
+            chatScene.setOpacity(1);
+            chatScene.toFront();
+            profileScene.setOpacity(0);
+            profileScene.toBack();
+
+        }
+
+    }
+
+    public void setProfile() {
+        for (User user : Controller.users) {
+            if (Controller.user.getUsername().equalsIgnoreCase(user.getUsername())) {
+                fullName.setText(user.getFullName());
+                fullName.setOpacity(1);
+                email.setText(user.getEmail());
+                email.setOpacity(1);
+                phoneNo.setText(user.getPhoneNumber());
+                gender.setText(user.getGender());
+                username.setText(user.getUsername());
+            }
+        }
+    }
+
+
+    public void chooseImageButton(ActionEvent actionEvent) {
+
+    }
+
+    public void saveImage(ActionEvent actionEvent) {
+
+    }
 }
 
 
