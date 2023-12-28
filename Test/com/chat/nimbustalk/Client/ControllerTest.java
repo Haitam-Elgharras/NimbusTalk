@@ -1,5 +1,8 @@
 package com.chat.nimbustalk.Client;
 
+import com.chat.nimbustalk.Client.connector.ServerConnector;
+import com.chat.nimbustalk.Server.rmi.ChatController;
+import org.mockito.Mockito;
 import com.chat.nimbustalk.Server.dao.entities.User;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -11,9 +14,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import com.chat.nimbustalk.Server.dao.DBConnection;
 
 class ControllerTest extends ApplicationTest {
     private Controller controller;
@@ -35,6 +44,7 @@ class ControllerTest extends ApplicationTest {
         controller.btnBack = new ImageView();
         controller.pnSignIn = new Pane();
 
+        DBConnection.setDatabaseUrl("jdbc:mysql://localhost:3306/nimbustalk_test");
         // Clear the users list before each test
         Controller.users.clear();
     }
@@ -102,8 +112,38 @@ class ControllerTest extends ApplicationTest {
         controller.handleMouseEvent(mockEvent);
 
         // Assert that the expected changes have occurred
-        // This will depend on what handleMouseEvent is supposed to do
-        // For example, if it's supposed to change the opacity of pnSignIn:
         assertEquals(1, controller.pnSignIn.getOpacity());
+    }
+
+    @Test
+    void login() throws RemoteException {
+        // Create a mock ChatController
+        ChatController mockController = Mockito.mock(ChatController.class);
+
+        // Set up the mock to return a list of users when getAllUsers is called
+        List<User> mockUsers = new ArrayList<>();
+        User testUser = new User();
+        testUser.setUsername("testUser");
+        testUser.setPassword("testPass");
+        mockUsers.add(testUser);
+        Mockito.when(mockController.getAllUsers()).thenReturn(mockUsers);
+
+        // Set the controller in ServerConnector to the mock
+        ServerConnector.setController(mockController);
+
+        // Create a spy of the controller to mock the changeWindow method
+        Controller spyController = Mockito.spy(controller);
+        Mockito.doNothing().when(spyController).changeWindow();
+
+        // Set the username and password fields
+        spyController.userName.setText("testUser");
+        spyController.passWord.setText("testPass");
+
+        // Call login method
+        spyController.login();
+
+        // Assert that the expected changes have occurred
+        assertEquals(1, Controller.loggedInUser.size());
+        assertEquals("testUser", Controller.loggedInUser.get(0).getUsername());
     }
 }

@@ -179,7 +179,7 @@ public class HomeController extends Thread implements Initializable {
                     Platform.runLater(() -> {
                         // read the new list of users from the server
                         try {
-                            Controller.users = (ArrayList<User>) ServerConnector.getControler().getAllUsers();
+                            Controller.users = (ArrayList<User>) ServerConnector.getController().getAllUsers();
                         } catch (RemoteException e) {
                             throw new RuntimeException(e);
                         }
@@ -410,7 +410,7 @@ public class HomeController extends Thread implements Initializable {
         User receiver = Controller.users.stream().filter(u -> u.getUsername().equals(finalRecipient)).findFirst().orElse(null);
         m.setReceiver(receiver);
         try {
-            ServerConnector.getControler().addMessage(m);
+            ServerConnector.getController().addMessage(m);
         }
         catch (Exception e){
             e.printStackTrace();
@@ -531,7 +531,7 @@ public class HomeController extends Thread implements Initializable {
                 }
                 List<Message> messages = null;
                 try {
-                    messages = ServerConnector.getControler().getAllMessages(Controller.user, user);
+                    messages = ServerConnector.getController().getAllMessages(Controller.user, user);
                 } catch (RemoteException e) {
                     throw new RuntimeException(e);
                 }

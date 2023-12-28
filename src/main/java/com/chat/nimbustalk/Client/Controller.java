@@ -69,7 +69,7 @@ public class Controller {
     public static  ArrayList<User>  users = new ArrayList<>();
 
     public void registration() throws RemoteException {
-        users = (ArrayList<User>) ServerConnector.getControler().getAllUsers();
+        users = (ArrayList<User>) ServerConnector.getController().getAllUsers();
 
        if (!regName.getText().equalsIgnoreCase("")
                 && !regPass.getText().equalsIgnoreCase("")
@@ -92,7 +92,7 @@ public class Controller {
                         u.setGender("F");
                     }
                     //Added user in DB
-                    ServerConnector.getControler().addUser(u);
+                    ServerConnector.getController().addUser(u);
                     goBack.setOpacity(1);
                     success.setOpacity(1);
                     makeDefault();
@@ -120,7 +120,7 @@ public class Controller {
     public void login() throws RemoteException {
         //At form opening: creation of chatController instance from server side
 
-        users = (ArrayList<User>) ServerConnector.getControler().getAllUsers();
+        users = (ArrayList<User>) ServerConnector.getController().getAllUsers();
         String username = userName.getText();
         String password = passWord.getText();
         if(username.equalsIgnoreCase("") || password.equalsIgnoreCase("")) {
