@@ -164,7 +164,7 @@ public class Controller {
         nameExists.setOpacity(0);
     }
 
-    private boolean checkUser(String username) {
+    boolean checkUser(String username) {
         for(User user : users) {
             if(user.getUsername().equalsIgnoreCase(username)) {
                 return false;
@@ -173,7 +173,7 @@ public class Controller {
         return true;
     }
 
-    private boolean checkEmail(String email) {
+    boolean checkEmail(String email) {
         for(User user : users) {
             if(user.getEmail().equalsIgnoreCase(email)) {
                 return false;
@@ -182,7 +182,7 @@ public class Controller {
         return true;
     }
 
-    private void makeDefault() {
+    void makeDefault() {
         regName.setText("");
         regPass.setText("");
         regEmail.setText("");
@@ -225,7 +225,7 @@ public class Controller {
     }
 
     @FXML
-    private void handleMouseEvent(MouseEvent event) {
+    void handleMouseEvent(MouseEvent event) {
         if (event.getSource() == btnBack) {
             pnSignIn.setOpacity(1);
             pnSignIn.toFront();

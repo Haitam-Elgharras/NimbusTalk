@@ -40,9 +40,6 @@ import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.*;
 
-//import static Client.Controller.loggedInUser;
-//import static Client.Controller.users;
-
 public class HomeController extends Thread implements Initializable {
     @FXML
     public Label clientName;
