@@ -265,17 +265,20 @@ public class HomeController extends Thread implements Initializable {
         if(username.contains("(private")){
             System.out.println("contains private :" + username);
             String tmp = username.replace("(private)", "").trim();
+            System.out.println("tmp: " + tmp);
             try {
+                System.out.println("it's in try");
                 fullname = Controller.users.stream().filter(u -> u.getUsername().equals(tmp)).findFirst().orElse(null).getFullName();
+                System.out.println("fullname of sender: " + fullname);
             }
             catch (Exception e){
                 fullname = tmp;
                 e.printStackTrace();
             }
-            if(!privateChatMode)
+            if(!privateChatMode) {
+                System.out.println("not in private chat mode " + privateChatMode);
                 fullname = fullname + " (private)";
-
-
+            }
         }
         Text text = new Text(message);
 
@@ -283,12 +286,16 @@ public class HomeController extends Thread implements Initializable {
         text.getStyleClass().add("message");
         TextFlow tempFlow = new TextFlow();
 
+        username=username.replace("(private)", "").trim();
         if (!Controller.user.getUsername().equalsIgnoreCase(username)) {
+            System.out.println("From testing of not receiving messages from other users while in private chat mode");
 
             // to not receive messages from other users while in private chat mode
             if(!isPrivate && privateChatMode ){
                 System.out.println("From last if");
                 assert privateChatUser != null;
+                System.out.println("privateChatUser: " + privateChatUser.getUsername());
+                System.out.println("username: " + username);
                 if(!privateChatUser.getUsername().equalsIgnoreCase(username)){
                     return false;
                 }
