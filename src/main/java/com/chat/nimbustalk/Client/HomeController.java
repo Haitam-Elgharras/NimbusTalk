@@ -601,13 +601,30 @@ public class HomeController extends Thread implements Initializable {
         }
     }
 
-
-    public void chooseImageButton(ActionEvent actionEvent) {
-
+    public boolean saveControl = false;
+    public void chooseImageButton( ActionEvent event) {
+        System.out.println("choose image");
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Image");
+        this.filePath = fileChooser.showOpenDialog(stage);
+        fileChoosePath.setText(filePath.getPath());
+        saveControl = true;
     }
 
-    public void saveImage(ActionEvent actionEvent) {
-
+    public void saveImage() {
+        if (saveControl) {
+            try {
+                Image image = new Image(filePath.toURI().toString());
+                proImage.setImage(image);
+                showProPic.setFill(new ImagePattern(image));
+                saveControl = false;
+                fileChoosePath.setText("");
+                System.out.println("save image");
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
+        }
     }
 }
 
