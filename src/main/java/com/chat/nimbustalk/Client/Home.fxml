@@ -741,7 +741,7 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <Button layoutX="688.0" layoutY="305.0" mnemonicParsing="false" onAction="#saveImage" prefHeight="38.0" prefWidth="107.0" styleClass="allButton" stylesheets="@../Css/style.css" text="Save">
+                        <Button layoutX="688.0" layoutY="305.0" mnemonicParsing="false" onAction="#setImage" prefHeight="38.0" prefWidth="107.0" styleClass="allButton" stylesheets="@../Css/style.css" text="Save">
                            <font>
                               <Font name="Arial" size="19.0" />
                            </font>

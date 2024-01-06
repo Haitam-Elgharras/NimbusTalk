@@ -1,14 +1,8 @@
 package com.chat.nimbustalk.Server;
 
-import com.chat.nimbustalk.Server.dao.Impl.GroupDaoImpl;
-import com.chat.nimbustalk.Server.dao.Impl.MessageDaoImpl;
-import com.chat.nimbustalk.Server.dao.Impl.UserDaoImpl;
-import com.chat.nimbustalk.Server.dao.Impl.UserGroupDaoImpl;
+import com.chat.nimbustalk.Server.dao.Impl.*;
 import com.chat.nimbustalk.Server.rmi.ChatControllerImpl;
-import com.chat.nimbustalk.Server.service.Impl.IServiceGroupImpl;
-import com.chat.nimbustalk.Server.service.Impl.IServiceMessageImpl;
-import com.chat.nimbustalk.Server.service.Impl.IServiceUserGroupImpl;
-import com.chat.nimbustalk.Server.service.Impl.IServiceUserImpl;
+import com.chat.nimbustalk.Server.service.Impl.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,7 +19,7 @@ public class Server {
     public static void main(String[] args) {
 
         try {
-            ChatControllerImpl c = new ChatControllerImpl(new IServiceUserImpl(new UserDaoImpl()), new IServiceMessageImpl(new MessageDaoImpl()), new IServiceGroupImpl(new GroupDaoImpl()), new IServiceUserGroupImpl(new UserGroupDaoImpl()));
+            ChatControllerImpl c = new ChatControllerImpl(new IServiceUserImpl(new UserDaoImpl()), new IServiceMessageImpl(new MessageDaoImpl()), new IServiceGroupImpl(new GroupDaoImpl()), new IServiceUserGroupImpl(new UserGroupDaoImpl()),new IServiceUserImagesImpl(new UserImagesDaoImpl()));
             LocateRegistry.createRegistry(1099);
             Naming.rebind("rmi://localhost/1099/ob", c);
         }

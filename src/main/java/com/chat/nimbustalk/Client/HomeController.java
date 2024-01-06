@@ -3,6 +3,7 @@ package com.chat.nimbustalk.Client;
 import com.chat.nimbustalk.Client.connector.ServerConnector;
 import com.chat.nimbustalk.Server.dao.entities.Message;
 import com.chat.nimbustalk.Server.dao.entities.User;
+import com.chat.nimbustalk.Server.dao.entities.UserImages;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -131,6 +132,21 @@ public class HomeController extends Thread implements Initializable {
             });
         }
         connectSocket();
+
+        try {
+            UserImages userImages = ServerConnector.getController().getUserImageByUserId(Controller.user.getId());
+            if (userImages != null && userImages.getImage() != null && userImages.getImage().length > 0) {
+                // Convert the byte array to an Image object
+                InputStream imageStream = new ByteArrayInputStream(userImages.getImage());
+                Image image = new Image(imageStream);
+
+                // Set the image to the proImage ImageView
+                proImage.setImage(image);
+                System.out.println("image set from db");
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     public void connectSocket() {
@@ -612,18 +628,41 @@ public class HomeController extends Thread implements Initializable {
         saveControl = true;
     }
 
-    public void saveImage() {
+    public void setImage() {
         if (saveControl) {
             try {
                 Image image = new Image(filePath.toURI().toString());
                 proImage.setImage(image);
-                showProPic.setFill(new ImagePattern(image));
                 saveControl = false;
                 fileChoosePath.setText("");
-                System.out.println("save image");
+
+                // Save the image to the database
+                saveImageInDb();
             } catch (Exception e) {
                 System.err.println(e.getMessage());
             }
+        }
+    }
+
+    public void saveImageInDb(){
+        // Save the image to the database
+        UserImages userImages = new UserImages();
+        userImages.setUserId(Controller.user.getId());
+
+        // delete the old image from the database
+        try {
+            ServerConnector.getController().deleteByUserId(Controller.user.getId());
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+
+        try (InputStream imageStream = new FileInputStream(filePath)) {
+            byte[] imageData = imageStream.readAllBytes();
+            userImages.setImage(imageData);
+            ServerConnector.getController().addUserImage(userImages);
+            filePath = null;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

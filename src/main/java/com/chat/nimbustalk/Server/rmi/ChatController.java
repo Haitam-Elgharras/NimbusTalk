@@ -4,6 +4,8 @@ import com.chat.nimbustalk.Server.dao.entities.Group;
 import com.chat.nimbustalk.Server.dao.entities.Message;
 import com.chat.nimbustalk.Server.dao.entities.User;
 import com.chat.nimbustalk.Server.dao.entities.UserGroup;
+import com.chat.nimbustalk.Server.dao.entities.UserImages;
+
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -33,5 +35,14 @@ public interface ChatController extends Remote {
     void addUserToGroup(UserGroup u) throws RemoteException;
     List<Group> getGroupsByUser(User user) throws RemoteException;
     List<User> getUsersByGroup(Group group) throws RemoteException;
+
+    // UserImages Functions
+    void addUserImage(UserImages u) throws RemoteException;
+    List<UserImages> getAllUserImages() throws RemoteException;
+    UserImages getUserImageById(Integer id) throws RemoteException;
+    UserImages getUserImageByUserId(Integer id) throws RemoteException;
+
+    // delete user image
+   void deleteByUserId(Integer id) throws RemoteException;
 
 }
