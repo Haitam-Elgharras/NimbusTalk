@@ -41,7 +41,6 @@ public interface ChatController extends Remote {
     List<UserImages> getAllUserImages() throws RemoteException;
     UserImages getUserImageById(Integer id) throws RemoteException;
     UserImages getUserImageByUserId(Integer id) throws RemoteException;
-
     // delete user image
    void deleteByUserId(Integer id) throws RemoteException;
 

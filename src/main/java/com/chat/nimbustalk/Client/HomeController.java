@@ -459,24 +459,39 @@ public class HomeController extends Thread implements Initializable {
 
             // Add user boxes dynamically
             double layoutY = 0;
+            Map<Integer, UserImages> userImagesMap = new HashMap<>();
+
+            // get all the images of users profile from the database
+            try {
+                List<UserImages> userImages = ServerConnector.getController().getAllUserImages();
+                userImages.forEach(u -> userImagesMap.put(u.getUserId(), u));
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
             for (User client : userList) {
                 if (Controller.user.getUsername().equals(client.getUsername())) continue;
 
-                HBox userBox = createUserBox(client);
+                // check if the user id is on the images from userImagesMap
+                UserImages userImages = userImagesMap.get(client.getId());
+                HBox userBox = null;
+                if (userImages != null && userImages.getImage() != null && userImages.getImage().length > 0)
+                     userBox = createUserBox(client, userImages.getImage());
+                else
+                        userBox = createUserBox(client, null);
+
                 assert userBox != null;
                 userBox.setLayoutY(layoutY);
                 layoutY += 100; // Increment layoutY by 100 for the next user box
 
                 // Add the user box to the list view
                 listView.getItems().add(userBox);
-                
             }
         });
 
         return true;
     }
 
-    private HBox createUserBox(User client) {
+    private HBox createUserBox(User client, byte[] image) {
 
         File file = new File("src/main/java/com/chat/nimbustalk/Client/UserBox.fxml");
         URL url;
@@ -497,6 +512,14 @@ public class HomeController extends Thread implements Initializable {
             userBoxController.setUsernameLabel(client.getFullName());
             userBoxController.getHiddenUsername().setText(client.getUsername());
 
+            if(image != null && image.length > 0){
+                // Convert the byte array to an Image object
+                InputStream imageStream = new ByteArrayInputStream(image);
+                Image img = new Image(imageStream);
+
+                // Set the image to the proImage ImageView
+                userBoxController.setUserListProfile(img);
+            }
             // You can now return this HBox and use it as needed
             return userBox;
         } catch (IOException e) {
@@ -649,21 +672,24 @@ public class HomeController extends Thread implements Initializable {
         UserImages userImages = new UserImages();
         userImages.setUserId(Controller.user.getId());
 
-        // delete the old image from the database
-        try {
-            ServerConnector.getController().deleteByUserId(Controller.user.getId());
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
 
-        try (InputStream imageStream = new FileInputStream(filePath)) {
+        try(InputStream imageStream = new FileInputStream(filePath)) {
+            // delete the old image from the database
+            ServerConnector.getController().deleteByUserId(Controller.user.getId());
+
+            // Save the new image to the database
             byte[] imageData = imageStream.readAllBytes();
             userImages.setImage(imageData);
             ServerConnector.getController().addUserImage(userImages);
             filePath = null;
+
+            // perform an update to the user list for all the users except the current user
+            writer.println("updateListOfUsers");
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
     }
 }
 

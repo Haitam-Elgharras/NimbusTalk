@@ -1,5 +1,7 @@
 package com.chat.nimbustalk.Server;
 
+import com.chat.nimbustalk.Client.HomeController;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -37,7 +39,13 @@ public class ClientHandler extends Thread {
                 if (msg.equalsIgnoreCase("exit"))
                     break;
 
-                
+                if(msg.equalsIgnoreCase("updateListOfUsers")) {
+                    System.out.println("this is the update list of users from the client handler");
+                    for (ClientHandler cl : clients) {
+                        cl.writer.println("updateListOfUsers");
+                    }
+                    continue;
+                }
 
                 // Split the message into tokens
                 String[] tokens = msg.split(":");

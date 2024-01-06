@@ -58,7 +58,6 @@ public class Server {
                 // if a new client is being add send a message to all clients to update the list
                 for (ClientHandler cl : clients) {
                     cl.writer.println("updateListOfUsers");
-                    
                 }
             }
         } catch (IOException e) {
