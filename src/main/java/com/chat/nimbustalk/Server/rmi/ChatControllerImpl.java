@@ -2,14 +2,13 @@ package com.chat.nimbustalk.Server.rmi;
 
 import com.chat.nimbustalk.Server.dao.Impl.MessageDaoImpl;
 import com.chat.nimbustalk.Server.dao.Impl.UserDaoImpl;
-import com.chat.nimbustalk.Server.dao.entities.Group;
-import com.chat.nimbustalk.Server.dao.entities.Message;
-import com.chat.nimbustalk.Server.dao.entities.User;
-import com.chat.nimbustalk.Server.dao.entities.UserGroup;
+import com.chat.nimbustalk.Server.dao.entities.*;
 import com.chat.nimbustalk.Server.service.Impl.IServiceGroupImpl;
 import com.chat.nimbustalk.Server.service.Impl.IServiceMessageImpl;
 import com.chat.nimbustalk.Server.service.Impl.IServiceUserGroupImpl;
 import com.chat.nimbustalk.Server.service.Impl.IServiceUserImpl;
+import com.chat.nimbustalk.Server.service.Impl.IServiceUserImagesImpl;
+
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -24,12 +23,17 @@ public class ChatControllerImpl extends UnicastRemoteObject implements ChatContr
 
     private IServiceUserGroupImpl serviceUserGroup;
 
-    public ChatControllerImpl(IServiceUserImpl serviceUser, IServiceMessageImpl serviceMessage, IServiceGroupImpl serviceGroup, IServiceUserGroupImpl serviceUserGroup) throws RemoteException {
+    private IServiceUserImagesImpl serviceUserImages;
+
+
+    public ChatControllerImpl(IServiceUserImpl serviceUser, IServiceMessageImpl serviceMessage, IServiceGroupImpl serviceGroup, IServiceUserGroupImpl serviceUserGroup, IServiceUserImagesImpl serviceUserImages) throws RemoteException {
         super();
         this.serviceUser = serviceUser;
         this.serviceMessage = serviceMessage;
         this.serviceGroup = serviceGroup;
         this.serviceUserGroup = serviceUserGroup;
+        this.serviceUserImages = serviceUserImages;
+
     }
     @Override
     public void addMessage(Message m) throws RemoteException {
@@ -108,6 +112,33 @@ public class ChatControllerImpl extends UnicastRemoteObject implements ChatContr
     @Override
     public List<User> getUsersByGroup(Group group) throws RemoteException {
         return this.serviceUserGroup.getUsersByGroup(group);
+    }
+
+
+    // userImages methods
+    @Override
+    public void addUserImage(UserImages u) throws RemoteException {
+        this.serviceUserImages.addUserImage(u);
+    }
+
+    @Override
+    public List<UserImages> getAllUserImages() throws RemoteException {
+        return this.serviceUserImages.getAllUserImages();
+    }
+
+    @Override
+    public UserImages getUserImageById(Integer id) throws RemoteException {
+        return this.serviceUserImages.getUserImageById(id);
+    }
+
+    @Override
+    public UserImages getUserImageByUserId(Integer userId) throws RemoteException {
+        return this.serviceUserImages.getUserImageByUserId(userId);
+    }
+
+    @Override
+    public void deleteByUserId(Integer userId) {
+        this.serviceUserImages.deleteByUserId(userId);
     }
 
 }

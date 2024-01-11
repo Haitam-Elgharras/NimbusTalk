@@ -28,7 +28,6 @@ public class IServiceMessageImpl implements IMessageService {
         return this.messageDao.getAll(sender,receiver);
     }
 
-    @Override
     public List<Message> getAllMessages(Group group) {return this.messageDao.getAll(group);}
 
 }

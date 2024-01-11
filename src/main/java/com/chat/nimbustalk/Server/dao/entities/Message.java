@@ -9,9 +9,7 @@ public class Message implements Serializable {
     private User sender;
     private User receiver;
     private Date created_at;
-
     private Group group;
-
     private boolean is_groupe_message;
 
     public int getId() {

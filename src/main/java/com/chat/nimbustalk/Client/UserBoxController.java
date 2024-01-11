@@ -2,6 +2,8 @@ package com.chat.nimbustalk.Client;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
@@ -12,6 +14,9 @@ public class UserBoxController {
 
     @FXML
     private Text hiddenUsername; // Add this line
+
+    @FXML
+    private ImageView userListProfile;
 
     @FXML
     private Label messageLabel;
@@ -38,5 +43,8 @@ public class UserBoxController {
         this.hiddenUsername = hiddenUsername;
     }
 
+    public void setUserListProfile(Image image) {
+        userListProfile.setImage(image);
+    }
 }
 

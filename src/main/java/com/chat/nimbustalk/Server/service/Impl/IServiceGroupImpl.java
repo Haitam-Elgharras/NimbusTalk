@@ -25,6 +25,5 @@ public class IServiceGroupImpl implements IGroupService {
     public Group getGroupById(Integer id) {
         return this.groupDao.getById(id);
     }
-    @Override
     public Group getGroupByName(String name){return this.groupDao.getGroupByName(name);}
 }

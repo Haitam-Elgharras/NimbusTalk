@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface MessageDao extends DAO<Message, Integer> {
     List<Message> getAll(User sender, User receiver);
+
     List<Message> getAll(Group group);
 }

@@ -11,5 +11,6 @@ public interface IMessageService {
     List<Message> getAllMessages();
     Message getMessageById(Integer id);
     List<Message> getAllMessages(User sender, User receiver);
+
     List<Message> getAllMessages(Group group);
 }
