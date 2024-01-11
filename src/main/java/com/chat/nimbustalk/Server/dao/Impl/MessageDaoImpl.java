@@ -33,30 +33,26 @@ public class MessageDaoImpl implements MessageDao {
             e.printStackTrace();
         }
     }
-
     @Override
     public Message getById(Integer id) {
         Message m = new Message();
         try {
             PreparedStatement pstm = DBConnection.getConnection()
-                    .prepareStatement("Select * from message where id = ?");
-            pstm.setInt(1, id);
+                            .prepareStatement("Select * from message where id = ?");
+            pstm.setInt(1,id);
             ResultSet rs = pstm.executeQuery();
-            while (rs.next()) {
+            while(rs.next()){
                 m.setId(rs.getInt("id"));
                 m.setContent(rs.getString("content"));
                 m.setSender(new UserDaoImpl().getById(rs.getInt("senderUser")));
                 m.setReceiver(new UserDaoImpl().getById(rs.getInt("receiverUser")));
                 m.setCreated_at(rs.getDate("created_at"));
-                m.setGroup(new GroupDaoImpl().getById(rs.getInt("groupe")));
-                m.setIs_groupe_message(rs.getBoolean("is_groupe_message"));
             }
-        } catch (Exception e) {
+        } catch (Exception e){
             e.printStackTrace();
         }
         return m;
     }
-
 
     @Override
     public List<Message> getAll() {
@@ -64,45 +60,40 @@ public class MessageDaoImpl implements MessageDao {
         try {
             Statement stm = DBConnection.getConnection().createStatement();
             ResultSet rs = stm.executeQuery("Select * from Message");
-            while (rs.next()) {
+            while(rs.next()){
                 Message m = new Message();
                 m.setId(rs.getInt("id"));
                 m.setContent(rs.getString("content"));
                 m.setSender(new UserDaoImpl().getById(rs.getInt("senderUser")));
                 m.setReceiver(new UserDaoImpl().getById(rs.getInt("receiverUser")));
                 m.setCreated_at(rs.getDate("created_at"));
-                m.setGroup(new GroupDaoImpl().getById(rs.getInt("groupe")));
-                m.setIs_groupe_message(rs.getBoolean("is_groupe_message"));
+
                 messages.add(m);
             }
-        } catch (Exception e) {
+        } catch (Exception e){
             e.printStackTrace();
         }
         return messages;
     }
-
 
     @Override
     public List<Message> getAll(User sender, User receiver) {
         ArrayList<Message> messages = new ArrayList<>();
         try {
             PreparedStatement pstm = DBConnection.getConnection()
-                    .prepareStatement("Select * from Message where (senderUser = ? or receiverUser = ?) and (senderUser = ? or receiverUser = ?) and is_groupe_message=?");
+                    .prepareStatement("Select * from Message where (senderUser = ? or receiverUser = ?) and (senderUser = ? or receiverUser = ?)");
             pstm.setInt(1,sender.getId());
             pstm.setInt(2,sender.getId());
             pstm.setInt(3,receiver.getId());
             pstm.setInt(4,receiver.getId());
-            pstm.setBoolean(5, false);
             ResultSet rs = pstm.executeQuery();
             while(rs.next()){
                 Message m = new Message();
-                m.setId(rs.getInt(1));
-                m.setContent(rs.getString(2));
-                m.setSender(new UserDaoImpl().getById(rs.getInt(3)));
-                m.setReceiver(new UserDaoImpl().getById(rs.getInt(4)));
-                m.setCreated_at(rs.getDate(5));
-                m.setGroup(new GroupDaoImpl().getById(rs.getInt(6)));
-                m.setIs_groupe_message(rs.getBoolean(7));
+                m.setId(rs.getInt("id"));
+                m.setContent(rs.getString("content"));
+                m.setSender(new UserDaoImpl().getById(rs.getInt("senderUser")));
+                m.setReceiver(new UserDaoImpl().getById(rs.getInt("receiverUser")));
+                m.setCreated_at(rs.getDate("created_at"));
                 messages.add(m);
             }
         } catch (Exception e){

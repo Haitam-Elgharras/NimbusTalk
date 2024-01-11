@@ -33,48 +33,48 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User getById(Integer id) {
-        User u = new User();
+        User c = new User();
         try {
             PreparedStatement pstm = DBConnection.getConnection()
                     .prepareStatement("Select * from User where id = ?");
-            pstm.setInt(1, id);
+            pstm.setInt(1,id);
             ResultSet rs = pstm.executeQuery();
-            while (rs.next()) {
-                u.setId(rs.getInt("id"));
-                u.setFullName(rs.getString("fullName"));
-                u.setEmail(rs.getString("email"));
-                u.setPassword(rs.getString("password"));
-                u.setGender(rs.getString("gender"));
-                u.setPhoneNumber(rs.getString("phoneNumber"));
-                u.setUsername(rs.getString("username"));
+            while(rs.next()){
+                c.setId(rs.getInt("id"));
+                c.setFullName(rs.getString("fullName"));
+                c.setEmail(rs.getString("email"));
+                c.setPassword(rs.getString("password"));
+                c.setGender(rs.getString("gender"));
+                c.setPhoneNumber(rs.getString("phoneNumber"));
+                c.setUsername(rs.getString("username"));
             }
         } catch (Exception e){
             e.printStackTrace();
         }
-        return u;
+        return c;
     }
 
     @Override
     public List<User> getAll() {
-        ArrayList<User> users = new ArrayList<>();
+        ArrayList<User> clients = new ArrayList<>();
         try {
             Statement stm = DBConnection.getConnection().createStatement();
             ResultSet rs = stm.executeQuery("Select * from User");
-            while (rs.next()) {
-                User u = new User();
-                u.setId(rs.getInt("id"));
-                u.setFullName(rs.getString("fullName"));
-                u.setEmail(rs.getString("email"));
-                u.setPassword(rs.getString("password"));
-                u.setGender(rs.getString("gender"));
-                u.setPhoneNumber(rs.getString("phoneNumber"));
-                u.setUsername(rs.getString("username"));
-                users.add(u);
+            while(rs.next()){
+                User c= new User();
+                c.setId(rs.getInt("id"));
+                c.setFullName(rs.getString("fullName"));
+                c.setEmail(rs.getString("email"));
+                c.setPassword(rs.getString("password"));
+                c.setGender(rs.getString("gender"));
+                c.setPhoneNumber(rs.getString("phoneNumber"));
+                c.setUsername(rs.getString("username"));
+                clients.add(c);
             }
         } catch (Exception e){
             e.printStackTrace();
         }
-        return users;
+        return clients;
     }
 
     @Override

@@ -69,7 +69,7 @@ public class Controller {
     public static  ArrayList<User>  users = new ArrayList<>();
 
     public void registration() throws RemoteException {
-        users = (ArrayList<User>) ServerConnector.getControler().getAllUsers();
+        users = (ArrayList<User>) ServerConnector.getController().getAllUsers();
 
        if (!regName.getText().equalsIgnoreCase("")
                 && !regPass.getText().equalsIgnoreCase("")
@@ -92,7 +92,7 @@ public class Controller {
                         u.setGender("F");
                     }
                     //Added user in DB
-                    ServerConnector.getControler().addUser(u);
+                    ServerConnector.getController().addUser(u);
                     goBack.setOpacity(1);
                     success.setOpacity(1);
                     makeDefault();
@@ -120,7 +120,7 @@ public class Controller {
     public void login() throws RemoteException {
         //At form opening: creation of chatController instance from server side
 
-        users = (ArrayList<User>) ServerConnector.getControler().getAllUsers();
+        users = (ArrayList<User>) ServerConnector.getController().getAllUsers();
         String username = userName.getText();
         String password = passWord.getText();
         if(username.equalsIgnoreCase("") || password.equalsIgnoreCase("")) {
@@ -131,14 +131,13 @@ public class Controller {
         }
         boolean login = false;
         for (User x : users) {
-            System.out.println(x.getUsername() + " " + x.getPassword());
-
+            
             if (x.getUsername().equalsIgnoreCase(username) && x.getPassword().equals(password)) {
                 login = true;
                 //Created User
                 user = x;
                 loggedInUser.add(x);
-
+                
                 break;
             }
         }
@@ -165,7 +164,7 @@ public class Controller {
         nameExists.setOpacity(0);
     }
 
-    private boolean checkUser(String username) {
+    boolean checkUser(String username) {
         for(User user : users) {
             if(user.getUsername().equalsIgnoreCase(username)) {
                 return false;
@@ -174,7 +173,7 @@ public class Controller {
         return true;
     }
 
-    private boolean checkEmail(String email) {
+    boolean checkEmail(String email) {
         for(User user : users) {
             if(user.getEmail().equalsIgnoreCase(email)) {
                 return false;
@@ -183,7 +182,7 @@ public class Controller {
         return true;
     }
 
-    private void makeDefault() {
+    void makeDefault() {
         regName.setText("");
         regPass.setText("");
         regEmail.setText("");
@@ -226,7 +225,7 @@ public class Controller {
     }
 
     @FXML
-    private void handleMouseEvent(MouseEvent event) {
+    void handleMouseEvent(MouseEvent event) {
         if (event.getSource() == btnBack) {
             pnSignIn.setOpacity(1);
             pnSignIn.toFront();

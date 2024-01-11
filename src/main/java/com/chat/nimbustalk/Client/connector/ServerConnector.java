@@ -16,8 +16,12 @@ public class ServerConnector {
         }
     }
 
-    public static ChatController getControler(){
+    public static ChatController getController(){
         if (serverConnector == null) serverConnector = new ServerConnector();
         return chatController;
+    }
+
+    public static void setController(ChatController controller) {
+        chatController = controller;
     }
 }
