@@ -192,7 +192,8 @@ public class Controller {
         setOpacity(controlRegLabel, checkEmail, nameExists);
     }
 
-    public void changeWindow() {
+    public void
+    changeWindow() {
         try {
             Stage stage = (Stage) userName.getScene().getWindow();
 

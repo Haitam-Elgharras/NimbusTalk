@@ -78,7 +78,9 @@
                                  </cursor>
                               </ImageView>
                               <Pane prefHeight="295.0" prefWidth="92.0" VBox.vgrow="ALWAYS" />
-                              <ImageView fitHeight="48.0" fitWidth="38.0" layoutX="37.0" layoutY="399.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="logoutBtn" fitHeight="48.0" fitWidth="38.0" layoutX="37.0" layoutY="399.0" pickOnBounds="true" preserveRatio="true"
+                                 onMouseClicked="#logout"
+                              >
                                  <image>
                                     <Image url="@../icons/icons8-log-out-50.png" />
                                  </image>
@@ -410,7 +412,7 @@
                      <children>
                         <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <Label fx:id="usernameLabel" prefHeight="32.0" prefWidth="197.0" text="Haitam Elgharras" textFill="#9da7a7">
+                              <Label fx:id="usernameLabel" prefHeight="32.0" prefWidth="197.0" text="ROOM" textFill="#9da7a7">
                                  <font>
                                     <Font name="Ebrima Bold" size="24.0" />
                                  </font>

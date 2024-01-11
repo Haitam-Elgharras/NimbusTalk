@@ -37,6 +37,7 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.*;
@@ -104,6 +105,10 @@ public class HomeController extends Thread implements Initializable {
     private ListView listView;
     @FXML
     private VBox clientListBox;
+
+    @FXML
+    private ImageView logoutBtn;
+
 
     private FileChooser fileChooser;
     private File filePath;
@@ -184,7 +189,7 @@ public class HomeController extends Thread implements Initializable {
     public void run() {
         try {
             // Continuously read messages from the server
-            while (true) {
+            while (socket != null && !socket.isClosed()) {
                 // 1. Read a line of text from the server(clientHandler)
                 String msg = reader.readLine();
                 System.out.println("msg: " + msg);
@@ -240,7 +245,10 @@ public class HomeController extends Thread implements Initializable {
                 });
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            if (!(e instanceof SocketException && e.getMessage().equalsIgnoreCase("Socket closed"))) {
+                // Log or handle other exceptions
+                e.printStackTrace();
+            }
         } finally {
             try {
                 // 8. Close the BufferedReader, PrintWriter, and Socket
@@ -691,6 +699,30 @@ public class HomeController extends Thread implements Initializable {
         }
 
     }
+
+    public void logout(MouseEvent e) {
+        try {
+            // close the socket
+            if (socket != null && !socket.isClosed()) {
+                socket.close();
+            }
+
+            File file = new File("src/main/java/com/chat/nimbustalk/Client/Sample.fxml");
+            URL url = file.toURI().toURL();
+            Parent root = FXMLLoader.load(url);
+            Scene scene = new Scene(root);
+
+            Stage currentStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+
+            currentStage.setScene(scene);
+
+            currentStage.show();
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
 }
 
 
