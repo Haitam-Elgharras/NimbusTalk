@@ -210,6 +210,16 @@ public class HomeController extends Thread implements Initializable {
                     continue;
                 }
 
+                System.out.println("msg :" +msg);
+                // check if the msg contains public keyword
+                if(msg.contains("public")&& privateChatMode){
+                    continue;
+                }
+                else if(!privateChatMode){
+                   msg= msg.replace("public:", "");
+                    System.out.println("msg :" +msg);
+                }
+
                 // 2. Split the message into tokens
                 String[] tokens = msg.split(":");
                 String cmd = tokens[0];
@@ -220,12 +230,8 @@ public class HomeController extends Thread implements Initializable {
                 System.out.println("tokenToAppend: " + tokenToAppend);
                 fullMsg.append(tokenToAppend);
 
-                // 4. Print the command and the full message
-                
-                
-
                 // 5. Skip messages sent by the current user because they are already displayed
-                if (cmd.equalsIgnoreCase(Controller.user.getUsername())) {
+                if (cmd.equalsIgnoreCase(Controller.user.getUsername())){
                     {
                         continue;
                     }
@@ -324,6 +330,7 @@ public class HomeController extends Thread implements Initializable {
                     return false;
                 }
             }
+            //
             System.out.println("fullname: " + fullname);
             Text txtName = new Text(fullname + "\n");
             txtName.getStyleClass().add("txtName");

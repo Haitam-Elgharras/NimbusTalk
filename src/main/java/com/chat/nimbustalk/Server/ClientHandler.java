@@ -79,10 +79,9 @@ public class ClientHandler extends Thread {
                         }
                     }
                 } else {
-                        
                         // Regular public message, broadcast to all clients
                         for (ClientHandler cl : clients)
-                            cl.writer.println(msg);
+                            cl.writer.println("public:"+msg);
                 }
             }
         } catch (Exception e) {
