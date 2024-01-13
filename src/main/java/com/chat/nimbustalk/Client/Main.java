@@ -16,7 +16,7 @@ public class Main extends Application {
         File file = new File("src/main/java/com/chat/nimbustalk/Client/Sample.fxml");
         URL url = file.toURI().toURL();
         Parent root = FXMLLoader.load(url);
-        stage.setTitle("Nimbus Talk");
+        stage.setTitle("NimbusTalk");
         stage.getIcons().add(new javafx.scene.image.Image("file:src/main/java/com/chat/nimbustalk/icons/logo.png"));
         stage.setScene(new Scene(root, 330, 560));
         stage.setResizable(false);

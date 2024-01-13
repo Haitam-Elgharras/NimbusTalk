@@ -147,7 +147,7 @@ public class HomeController extends Thread implements Initializable {
 
                 // Set the image to the proImage ImageView
                 proImage.setImage(image);
-                System.out.println("image set from db");
+                
             }
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -192,7 +192,7 @@ public class HomeController extends Thread implements Initializable {
             while (socket != null && !socket.isClosed()) {
                 // 1. Read a line of text from the server(clientHandler)
                 String msg = reader.readLine();
-                System.out.println("msg: " + msg);
+                
 
                 if(msg.equalsIgnoreCase("updateListOfUsers")) {
                     
@@ -210,14 +210,14 @@ public class HomeController extends Thread implements Initializable {
                     continue;
                 }
 
-                System.out.println("msg :" +msg);
+                
                 // check if the msg contains public keyword
                 if(msg.contains("public")&& privateChatMode){
                     continue;
                 }
                 else if(!privateChatMode){
                    msg= msg.replace("public:", "");
-                    System.out.println("msg :" +msg);
+                    
                 }
 
                 // 2. Split the message into tokens
@@ -227,7 +227,7 @@ public class HomeController extends Thread implements Initializable {
                 // 3. Extract the full message (excluding the command)
                 StringBuilder fullMsg = new StringBuilder();
                 String tokenToAppend = tokens.length > 2 ? tokens[1]+":"+tokens[2] : tokens[1];
-                System.out.println("tokenToAppend: " + tokenToAppend);
+                
                 fullMsg.append(tokenToAppend);
 
                 // 5. Skip messages sent by the current user because they are already displayed
@@ -235,15 +235,11 @@ public class HomeController extends Thread implements Initializable {
                     {
                         continue;
                     }
-                } else if (fullMsg.toString().trim().equalsIgnoreCase("bye")) {
-                    // 6. If the message indicates "bye," exit the loop and close resources
-                    break;
                 }
 
                 // 7. Call the update method to update the UI
                 Platform.runLater(() -> {
                     try {
-                        System.out.println("cmd ? : " + cmd);
                         update(cmd, fullMsg.toString().trim());
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -273,7 +269,7 @@ public class HomeController extends Thread implements Initializable {
         String[] tokens = message.split(":");
         fullname = tokens[0];
 
-        System.out.println("from update method: " + username + " " + message);
+        
 
         boolean isPrivate = Controller.user.getUsername().equalsIgnoreCase(username) && tokens.length > 1 && tokens[1].startsWith("@");
 
@@ -293,20 +289,20 @@ public class HomeController extends Thread implements Initializable {
         }
 
         if(username.contains("(private")){
-            System.out.println("contains private :" + username);
+            
             String tmp = username.replace("(private)", "").trim();
-            System.out.println("tmp: " + tmp);
+            
             try {
-                System.out.println("it's in try");
+                
                 fullname = Controller.users.stream().filter(u -> u.getUsername().equals(tmp)).findFirst().orElse(null).getFullName();
-                System.out.println("fullname of sender: " + fullname);
+                
             }
             catch (Exception e){
                 fullname = tmp;
                 e.printStackTrace();
             }
             if(!privateChatMode) {
-                System.out.println("not in private chat mode " + privateChatMode);
+                
                 fullname = fullname + " (private)";
             }
         }
@@ -318,20 +314,20 @@ public class HomeController extends Thread implements Initializable {
 
         username=username.replace("(private)", "").trim();
         if (!Controller.user.getUsername().equalsIgnoreCase(username)) {
-            System.out.println("From testing of not receiving messages from other users while in private chat mode");
+            
 
             // to not receive messages from other users while in private chat mode
             if(!isPrivate && privateChatMode ){
-                System.out.println("From last if");
+                
                 assert privateChatUser != null;
-                System.out.println("privateChatUser: " + privateChatUser.getUsername());
-                System.out.println("username: " + username);
+                
+                
                 if(!privateChatUser.getUsername().equalsIgnoreCase(username)){
                     return false;
                 }
             }
             //
-            System.out.println("fullname: " + fullname);
+            
             Text txtName = new Text(fullname + "\n");
             txtName.getStyleClass().add("txtName");
             tempFlow.getChildren().add(txtName);
@@ -360,7 +356,6 @@ public class HomeController extends Thread implements Initializable {
             hbox.setAlignment(Pos.CENTER_LEFT);
             hbox.getChildren().add(img);
             hbox.getChildren().add(flow);
-
         } else {
             text.setFill(Color.WHITE);
             tempFlow.getStyleClass().add("tempFlow");
@@ -398,7 +393,7 @@ public class HomeController extends Thread implements Initializable {
                 int spaceIndex = message.indexOf(" ");
                 if (spaceIndex != -1) {
                     recipient = message.substring(0, spaceIndex);
-                    System.out.println("recipient: from send method" + recipient);
+                    
 
                     message = message.substring(spaceIndex + 1);
                 }
@@ -412,7 +407,7 @@ public class HomeController extends Thread implements Initializable {
                             .filter(u -> u.getUsername().equals(finalRecipient.substring(1)))
                             .findFirst().orElse(null)).getFullName();
 
-                    System.out.println("verify the recipient: " + recipient);
+                    
                     sendPrivateMessage(recipient, fullname, message);
                 }
             } else {
@@ -422,9 +417,6 @@ public class HomeController extends Thread implements Initializable {
                 writer.println(Controller.user.getUsername() + ":" + fullMessage);
                 update(Controller.user.getUsername(), fullMessage); // Use the update method here
                 msgField.setText("");
-                if (message.equalsIgnoreCase("BYE") || message.equalsIgnoreCase("logout")) {
-                    System.exit(0);
-                }
             }
         }
     }
@@ -433,13 +425,13 @@ public class HomeController extends Thread implements Initializable {
         String fullMessage = fullname + ":" + recipient + ":" + message;
         
         update(Controller.user.getUsername(), fullMessage); // Use the update method here
-        System.out.println("whats sended to the sender: " + Controller.user.getUsername() + ":" + fullMessage);
+        
 
         // send message to the server
         writer.println(Controller.user.getUsername() + ":"+recipient+": "+message);
 //        writer.println(Controller.user.getUsername() + ":"+Controller.user.getFullName()+": "+message);
 
-        System.out.println("whats sends to the server: " + Controller.user.getUsername() + ":"+recipient+": "+message);
+        
         //Add message in DB
         Message m = new Message();
         m.setContent(message);
@@ -603,16 +595,16 @@ public class HomeController extends Thread implements Initializable {
                 if (messages != null) {
                     messages.stream()
                             .filter((m)->{
-                                System.out.println("message" + m.getContent());
-                                System.out.println("message" + m.getCreated_at());
+                                
+                                
                                 return true;
                             })
                             .filter(m -> m.getCreated_at() != null)
                             .sorted(Comparator.comparing(Message::getCreated_at))
                             .forEach(m -> {
                                 String message = m.getSender().getFullName() + ": " + m.getContent();
-                                System.out.println(message);
-                                System.out.println("update called");
+                                
+                                
                                 update(m.getSender().getUsername(), message);
                             });
                 }
@@ -623,7 +615,7 @@ public class HomeController extends Thread implements Initializable {
 
     public void handleProfileClick(MouseEvent event) {
         if(event.getSource().equals(profileIconHome)){
-            System.out.println("profileIconHome");
+            
             chatScene.setOpacity(0);
             chatScene.toBack();
             profileScene.setOpacity(1);
@@ -631,7 +623,7 @@ public class HomeController extends Thread implements Initializable {
             setProfile();
         }
         else if(event.getSource().equals(profileIcon)){
-            System.out.println("profileIcon");
+            
             chatScene.setOpacity(1);
             chatScene.toFront();
             profileScene.setOpacity(0);
@@ -657,7 +649,7 @@ public class HomeController extends Thread implements Initializable {
 
     public boolean saveControl = false;
     public void chooseImageButton( ActionEvent event) {
-        System.out.println("choose image");
+        
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         fileChooser = new FileChooser();
         fileChooser.setTitle("Open Image");
@@ -721,6 +713,7 @@ public class HomeController extends Thread implements Initializable {
 
             Stage currentStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
 
+            currentStage.setTitle("NimbusTalk");
             currentStage.setScene(scene);
 
             currentStage.show();
